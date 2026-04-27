@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import HomeStack from "./Stack/HomeStack";
 
 const Tab = createBottomTabNavigator();
 
@@ -61,14 +62,24 @@ const CustomTabBar = ({ state, descriptors, navigation }) => {
 const BottomTabNavigator = () => {
     return (
         <Tab.Navigator
-            tabBar={(props) => <CustomTabBar {...props} />}
-            screenOptions={{ headerShown: false }}
-        >
-            <Tab.Screen name="Home" component={Home} />
-            <Tab.Screen name="Videos" component={videos} />
+            screenOptions={{
+                headerShown: false,
+                tabBarStyle: styles.floatingTab,
+                tabBarActiveTintColor: '#A68D60',
+                tabBarInactiveTintColor: '#222',
+            }}
+            >
+            <Tab.Screen 
+                name="HomeTab" 
+                component={HomeStack}
+                options={{
+                    tabBarLabel: 'Home',
+                    tabBarIcon: ({ color }) => <Text style={{ color, fontSize: 20 }}>🏠</Text>
+                }} />
+            {/* <Tab.Screen name="Videos" component={videos} />
             <Tab.Screen name="Shop" component={shop} />
             <Tab.Screen name="Articles" component={articles} />
-            <Tab.Screen name="Events" component={events} /> 
+            <Tab.Screen name="Events" component={events} />  */}
         </Tab.Navigator>
     );
 };
@@ -118,6 +129,19 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 11,
     fontWeight: '600',
+  },
+  floatingTab: {
+    position: 'absolute',
+    bottom: 25,
+    left: 20,
+    right: 20,
+    backgroundColor: 'white',
+    borderRadius: 40,
+    height: 70,
+    elevation: 5,
+    shadowOpacity: 0.1,
+    borderTopWidth: 0,
+    paddingBottom: 5
   },
 });
 
