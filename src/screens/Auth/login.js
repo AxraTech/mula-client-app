@@ -12,21 +12,26 @@ const Login = ({ navigation }) => {
 
 //---------------------------Login Handler-------------------------------------
     const handleLogin = async () => {
-        if (!phoneNumber || !password) {
-          console.log(LOGIN_ENDPOINT);
-          Alert.alert("Error", "please fill in all fields");
-          return;
-        }
         try {
-          const response = await authService.login(phoneNumber, password);
-          setAuth(response.user, response.token); //-------------save user and token to global state-----
-          //const data = await authService.login(phoneNumber, password);
-          console.log("Login successful:", "logged in");
-          Alert.alert("Success", "Welcome to MULA Art Gallery");
-        }
-        catch (error) {
-          console.log("Login Error:", error);
-          Alert.alert("Login Failed", error.message || "Please check your credentials and try again.");
+            const response = await authService.login(phoneNumber, password);
+            console.log("Full Login Response:", response);
+
+            const token = response.accessToken; 
+            
+            // The API returns { error, message, accessToken } but NO 'user' object.
+            // We will create a simple object to satisfy the store.
+            const user = response.user || { id: 'authenticated_user' }; 
+
+            if (token) {
+                // This will now trigger the navigation because isAuthenticated becomes true
+                await setAuth(user, token); 
+                console.log("Login successful: State updated");
+            } else {
+                console.log("Error: accessToken not found");
+            }
+        } catch (error) {
+            console.log("Login Error:", error);
+            Alert.alert("Login Failed", error.message || "Check your credentials");
         }
     };
 

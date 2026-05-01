@@ -1,5 +1,7 @@
 import { create } from "zustand";
 import { ecommerceService } from "../services/ecommerceService";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import useAuthStore from "./useAuthStore";
 
 const useEcommerceStore = create((set, get) => ({
     products: [],
@@ -13,36 +15,45 @@ const useEcommerceStore = create((set, get) => ({
 
     //---------------------------------------------Actions----------------------------------------------
     fetchCart: async () => {
+        const userId = useAuthStore.getState().user?.id;
+        if (!userId) return;
+
         set({ loading: true });
         try {
-            const items = await ecommerceService.getCartItems();
+            const response = await ecommerceService.getCartItems(userId);
+            const items = response.data?.data || response.data || [];
             set({ cartItems: items, loading: false });
-        }
-        catch (error) {
+        } catch (error) {
             set({ loading: false });
-            console.error("Failed to fetch cart items:", error);
+            console.log("Cart Error:", error?.response?.data || error?.message || error);
         }
     },
-    addToCart: async (productId, quantity, userId) => {
-        set({ loading: true });
+
+    addToCart: async (productId, quantity = 1) => {
+        const { user } = useAuthStore.getState();
+        
         try {
-            await ecommerceService.addToCart(productId, quantity, userId);
-            get().fetchCart();
+            await ecommerceService.addToCart(productId, quantity, user.id); 
+            await get().fetchCart();
             return { success: true };
-        }
-        catch (error) {
-            return { success: false, error: error.message || "Failed to add to cart" };
+        } catch (error) {
+            console.error("DEBUG - Full Error Object:", error);
+            console.log("Cart Error Message:", error.message);
+            return { success: false };
         }
     },
+
     removeFromCart: async (id) => {
+        const originalItems = get().cartItems;
         try {
-            await ecommerceService.deleteCartItem(id);
             set((state) => ({
                 cartItems: state.cartItems.filter(item => item.id !== id)
             }));
-        }
-        catch (error) {
+            await ecommerceService.deleteCartItem(id);
+        } catch (error) {
             console.error("Failed to remove cart item:", error);
+            set({ cartItems: originalItems });
+            alert("Could not remove item. Please try again.");
         }
     },
 }));

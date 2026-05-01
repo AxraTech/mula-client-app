@@ -1,24 +1,35 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, Image, StyleSheet, ScrollView, ActivityIndicator, TouchableOpacity, Dimensions } from "react-native";
 import { getHomeData } from "../../services/homeAPI";
+import useAuthStore from "../../store/useAuthStore";
 
 const { width } = Dimensions.get('window');
 
-const HomeScreen = () => {
+const HomeScreen = ({ navigation }) => {
+    const token = useAuthStore((state) => state.token);
     const [ rawData, setRawData ] = useState(null);
     const [ filteredData, setFilteredData ] = useState([]);
     const [ activeTab, setActiveTab ] = useState('All');
     const [ loading, setLoading ] = useState(true);
 
     useEffect(() => {
-        loadData();
-    }, []);
+        if (token) {
+            loadData();
+        }
+    }, [token]);
 
     const loadData = async () => {
         try {
             const result = await getHomeData(token);
+            console.log("Artworks found:", result.all.length);
             setRawData(result);
             setFilteredData(result.all);
+            
+            if (!token) {
+                console.log("No token found");
+                setLoading(false);
+                return;
+            }
         }
         catch (error) {
             console.log("Error fetching home data:", error);
@@ -35,8 +46,15 @@ const HomeScreen = () => {
         else if (tab === 'Digital') setFilteredData(rawData.digitalArt);
     };
 
-    const ArtCard = ({ item, isLeft }) => (
-        <View style={[styles.cardContainer, isLeft ? styles.leftCard : styles.rightCard]}>
+    const ArtCard = ({ item, navigation }) => (
+        <TouchableOpacity 
+            style={styles.cardContainer} 
+            activeOpacity={0.9}
+            onPress={() => navigation.navigate('galleryDetail', { artwork: item })} // Ensure 'ArtworkDetail' matches your Stack Navigator name
+        >
+            <View style={styles.hangingThread} />
+            <View style={styles.dot} />
+            
             <View style={styles.imageWrapper}>
                 <Image source={{ uri: item.image }} style={styles.artImage} />
                 {item.isSold && (
@@ -52,13 +70,12 @@ const HomeScreen = () => {
                 <Text style={styles.titleText}>{item.title}</Text>
                 <Text style={styles.artistText}>{item.artistName}</Text>
                 {!item.isSold ? (
-                    <Text style={styles.priceText}>${item.price} MMK</Text>
+                    <Text style={styles.priceText}>{item.price} MMK</Text>
                 ) : (
                     <Text style={styles.soldOutText}>Sold Out</Text>
                 )}
             </View>
-            <View style={[styles.dot, isLeft ? styles.dotRight : styles.dotLeft]} />
-        </View>
+        </TouchableOpacity>
     );
 
     if (loading) return <ActivityIndicator style={{ flex: 1 }} />;
@@ -87,12 +104,12 @@ const HomeScreen = () => {
                 <View style={styles.masonryGrid}>
                     <View style={styles.column}>
                         {filteredData.filter((_, i) => i % 2 === 0).map(item => (
-                            <ArtCard key={item.id} item={item} isLeft={true} />
+                            <ArtCard key={item.id} item={item} navigation={navigation} />
                         ))}
                     </View>
                     <View style={styles.column}>
                         {filteredData.filter((_, i) => i % 2 !== 0).map(item => (
-                            <ArtCard key={item.id} item={item} isLeft={false} />
+                            <ArtCard key={item.id} item={item} navigation={navigation} />
                         ))}
                     </View>
                 </View>
@@ -108,16 +125,51 @@ const styles = StyleSheet.create({
     tagline: { fontSize: 12, fontStyle: 'italic', color: '#888', marginVertical: 10 },
     filterRow: { flexDirection: 'row', gap: 10 },
     filterBtn: { paddingHorizontal: 20, paddingVertical: 8, borderRadius: 20, borderWidth: 1, borderColor: '#A68D60' },
-    activeBtn: { backgroundColor: '#A68D60' },
+    activeFilterBtn: { backgroundColor: '#A68D60' },
     filterText: { color: '#A68D60', fontWeight: '500' },
-    activeFilterText: { color: '#FFF' },
+    activeFilterTab: { color: '#FFF' },
     scrollContent: { paddingBottom: 100 },
-    timelineLine: { position: 'absolute', left: '50%', top: 0, bottom: 0, width: 1, backgroundColor: '#CCC', zIndex: -1 },
+    timelineLine: { 
+        position: 'absolute', 
+        left: '50%', 
+        top: 0, 
+        bottom: 0, 
+        width: 1, 
+        backgroundColor: '#D1C7AC', 
+        zIndex: 0 
+    },
     masonryGrid: { flexDirection: 'row', paddingHorizontal: 10 },
-    column: { flex: 1, gap: 20 },
-    cardContainer: { width: '95%', alignSelf: 'center', backgroundColor: '#FFF', borderRadius: 4, elevation: 3 },
-    leftCard: { marginTop: 40 }, // Staggers the left column
-    rightCard: { marginTop: 120 }, // Staggers the right column more
+    column: { flex: 1 },
+    
+    cardContainer: { 
+        width: '90%', 
+        alignSelf: 'center', 
+        backgroundColor: '#FFF', 
+        borderRadius: 4, 
+        elevation: 3,
+        marginTop: 60,
+        position: 'relative'
+    },
+    hangingThread: {
+        position: 'absolute',
+        top: -20,
+        left: '50%',
+        width: 1,
+        height: 20,
+        backgroundColor: '#D1C7AC',
+    },
+    dot: { 
+        position: 'absolute', 
+        width: 8, 
+        height: 8, 
+        borderRadius: 4, 
+        backgroundColor: '#A68D60', 
+        top: -24,
+        left: '50%',
+        marginLeft: -4,
+        zIndex: 2
+    },
+
     imageWrapper: { position: 'relative' },
     artImage: { width: '100%', height: 220, borderRadius: 4 },
     soldBadge: { position: 'absolute', top: 10, right: 10, backgroundColor: '#D97D54', padding: 4, borderRadius: 4 },
@@ -128,9 +180,6 @@ const styles = StyleSheet.create({
     artistText: { color: '#777', fontSize: 12 },
     priceText: { color: '#A68D60', fontWeight: 'bold', marginTop: 5 },
     soldOutText: { color: '#A68D60', marginTop: 5 },
-    dot: { position: 'absolute', width: 10, height: 10, borderRadius: 5, backgroundColor: '#A68D60', top: -5 },
-    dotLeft: { left: -15 },
-    dotRight: { right: -15 }
 });
 
 export default HomeScreen;
