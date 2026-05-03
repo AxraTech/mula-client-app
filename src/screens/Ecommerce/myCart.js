@@ -12,6 +12,10 @@ const MyCart = ({ navigation }) => {
     const removeFromCart = useEcommerceStore((state) => state.removeFromCart);
     const user = useAuthStore((state) => state.user);
 
+    // LOG EVERYTHING HERE
+  console.log("Current cartItems type:", typeof cartItems);
+  console.log('DEBUG - cartItems content:', JSON.stringify(cartItems, null, 2));
+
     const formatCurrency = (num) => {
         return num ? num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0";
     };
@@ -58,19 +62,19 @@ const MyCart = ({ navigation }) => {
                 {cartItems.length === 0 ? (
                     <Text style={styles.emptyText}>Your cart is empty</Text>
                 ) : (
-                    cartItems.map(item => (
+                    cartItems?.map(item => (
                         item?.product ? (
                         <View key={item.id} style={styles.cartCard}>
                             <Image 
-                                source={{ uri: item.product?.product_image_url }} 
+                                source={{ uri: item.product_image_url }} 
                                 style={styles.cartImg} 
                             />
                             <View style={styles.cartInfo}>
-                                <Text style={styles.itemName} numberOfLines={1}>{item.product?.title}</Text>
+                                <Text style={styles.itemName} numberOfLines={1}>{item.title}</Text>
                                 <Text style={styles.itemArtist}>by {item.product?.brand_name || 'MULA'}</Text>
                                 <Text style={styles.itemType}>{item.product?.artwork_year}</Text>
                                 <Text style={styles.itemPrice}>
-                                    {formatCurrency(item.product?.current_price)} MMK
+                                    {formatCurrency(item.price)} MMK
                                 </Text>
                             </View>
                             <TouchableOpacity 

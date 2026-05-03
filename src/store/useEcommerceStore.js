@@ -21,7 +21,8 @@ const useEcommerceStore = create((set, get) => ({
         set({ loading: true });
         try {
             const response = await ecommerceService.getCartItems(userId);
-            const items = response.data?.data || response.data || [];
+            // Extract the array specifically from 'cart_items'
+            const items = response.data?.cart_items || []; 
             set({ cartItems: items, loading: false });
         } catch (error) {
             set({ loading: false });
