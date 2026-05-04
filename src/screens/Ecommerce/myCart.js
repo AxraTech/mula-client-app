@@ -1,38 +1,51 @@
 import React, { useEffect } from 'react';
-import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator, Alert, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import useEcommerceStore from '../../store/useEcommerceStore';
 import useAuthStore from '../../store/useAuthStore';
 
 const MyCart = ({ navigation }) => {
-    // 1. Hook into the Zustand Store
     const cartItems = useEcommerceStore((state) => state.cartItems);
     const loading = useEcommerceStore((state) => state.loading);
     const fetchCart = useEcommerceStore((state) => state.fetchCart);
     const removeFromCart = useEcommerceStore((state) => state.removeFromCart);
     const user = useAuthStore((state) => state.user);
 
-    // LOG EVERYTHING HERE
-  console.log("Current cartItems type:", typeof cartItems);
-  console.log('DEBUG - cartItems content:', JSON.stringify(cartItems, null, 2));
+    // 1. Handle Clear All Logic
+    const handleClearAll = () => {
+        if (cartItems.length === 0) return;
+
+        Alert.alert(
+            "Clear Cart",
+            "Are you sure you want to remove all items from your cart?",
+            [
+                { text: "Cancel", style: "cancel" },
+                { 
+                    text: "Clear All", 
+                    style: "destructive", 
+                    onPress: async () => {
+                        for (const item of cartItems) {
+                            await removeFromCart(item.id);
+                        }
+                    } 
+                }
+            ]
+        );
+    };
 
     const formatCurrency = (num) => {
         return num ? num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0";
     };
 
-    // 2. Fetch cart data when screen mounts
     useEffect(() => {
         if (user?.id && typeof fetchCart === 'function') {
             fetchCart();
-        } else {
-            console.error("fetchCart is not a function! Check useEcommerceStore exports.");
         }
     }, [user?.id]);
 
-    // 3. Calculate total based on API field names (current_price)
     const total = Array.isArray(cartItems) 
     ? cartItems.reduce((sum, item) => {
-        const price = parseFloat(item?.product?.current_price || 0);
+        const price = parseFloat(item?.price || 0);
         return sum + price;
     }, 0) 
     : 0;
@@ -53,17 +66,21 @@ const MyCart = ({ navigation }) => {
                     <Text style={styles.backBtn}>‹</Text>
                 </TouchableOpacity>
                 <Text style={styles.headerTitle}>My Cart</Text>
-                <TouchableOpacity onPress={() => {}}>
-                    <Text style={styles.clearBtn}>Clear</Text>
+                
+                <TouchableOpacity onPress={handleClearAll}>
+                    <Text style={[styles.clearBtn, cartItems.length === 0 && { opacity: 0.3 }]}>
+                        Clear
+                    </Text>
                 </TouchableOpacity>
             </View>
 
             <ScrollView contentContainerStyle={styles.scrollBody} showsVerticalScrollIndicator={false}>
                 {cartItems.length === 0 ? (
-                    <Text style={styles.emptyText}>Your cart is empty</Text>
+                    <View style={styles.emptyContainer}>
+                         <Text style={styles.emptyText}>Your cart is empty</Text>
+                    </View>
                 ) : (
                     cartItems?.map(item => (
-                        item?.product ? (
                         <View key={item.id} style={styles.cartCard}>
                             <Image 
                                 source={{ uri: item.product_image_url }} 
@@ -77,6 +94,7 @@ const MyCart = ({ navigation }) => {
                                     {formatCurrency(item.price)} MMK
                                 </Text>
                             </View>
+
                             <TouchableOpacity 
                                 style={styles.deleteBtn} 
                                 onPress={() => removeFromCart(item.id)}
@@ -84,11 +102,9 @@ const MyCart = ({ navigation }) => {
                                 <Text style={styles.deleteIcon}>🗑️</Text>
                             </TouchableOpacity>
                         </View>
-                        ) : null
                     ))
                 )}
 
-                {/* Summary Section */}
                 {cartItems.length > 0 && (
                     <>
                         <View style={styles.summaryBox}>
@@ -96,16 +112,13 @@ const MyCart = ({ navigation }) => {
                                 <Text style={styles.summaryLabel}>Items</Text>
                                 <Text style={styles.summaryValue}>{cartItems.length}</Text>
                             </View>
-                            <View style={styles.summaryRow}>
-                                <Text style={styles.summaryLabel}>Delivery</Text>
-                                <Text style={[styles.summaryValue, { color: '#4CAF50' }]}>Free</Text>
-                            </View>
                             <View style={[styles.summaryRow, styles.totalRow]}>
                                 <Text style={styles.totalLabel}>Total</Text>
                                 <Text style={styles.totalValue}>{formatCurrency(total)} MMK</Text>
                             </View>
                         </View>
 
+                        {/* Re-added Payment Box */}
                         <View style={styles.paymentBox}>
                             <Text style={styles.paymentTitle}>Accepted Payment</Text>
                             <View style={styles.badgeRow}>
@@ -120,12 +133,11 @@ const MyCart = ({ navigation }) => {
                 )}
             </ScrollView>
 
-            {/* Footer / Checkout Button */}
-            <SafeAreaView style={styles.footer}>
+            <SafeAreaView style={styles.footer} edges={['bottom']}>
                 <TouchableOpacity 
-                    disabled={cartItems.length === 0}
+                    disabled={cartItems.length === 0 || loading}
                     style={[styles.mainBtn, cartItems.length === 0 && { backgroundColor: '#CCC' }]} 
-                    onPress={() => navigation.navigate('checkout', { total })}
+                    onPress={() => navigation.navigate('checkOut', { total })}
                 >
                     <Text style={styles.mainBtnText}>
                         {loading ? 'Processing...' : `🔒 Checkout · ${formatCurrency(total)} MMK`}
@@ -143,13 +155,13 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between', 
         alignItems: 'center', 
         paddingHorizontal: 20, 
-        paddingTop: 60, 
+        paddingTop: Platform.OS === 'ios' ? 60 : 40, 
         paddingBottom: 20, 
         backgroundColor: '#FFF' 
     },
     backBtn: { fontSize: 35, color: '#333' },
     headerTitle: { fontSize: 18, fontWeight: 'bold' },
-    clearBtn: { color: '#888', fontSize: 14 },
+    clearBtn: { color: '#E53935', fontSize: 14, fontWeight: '600' },
     scrollBody: { padding: 20 },
     cartCard: { 
         flexDirection: 'row', 
@@ -184,7 +196,8 @@ const styles = StyleSheet.create({
     badgeRow: { flexDirection: 'row' },
     pBadge: { backgroundColor: '#EEE', paddingHorizontal: 12, paddingVertical: 6, borderRadius: 6, marginRight: 10 },
     pBadgeText: { fontSize: 12, color: '#666', fontWeight: '500' },
-    emptyText: { textAlign: 'center', marginTop: 50, color: '#888', fontSize: 16 },
+    emptyContainer: { alignItems: 'center', marginTop: 100 },
+    emptyText: { color: '#888', fontSize: 16 },
     footer: { backgroundColor: '#FFF', borderTopWidth: 1, borderTopColor: '#EEE' },
     mainBtn: { backgroundColor: '#A68D60', margin: 20, paddingVertical: 18, borderRadius: 12, alignItems: 'center' },
     mainBtnText: { color: '#FFF', fontSize: 16, fontWeight: 'bold' }

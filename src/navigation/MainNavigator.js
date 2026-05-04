@@ -3,7 +3,9 @@ import { createStackNavigator } from '@react-navigation/stack';
 import BottomTabNavigator from './BottomTabNavigator';
 import GalleryDetail from '../screens/Gallery/galleryDetail';
 import MyCart from '../screens/Ecommerce/myCart';
-//import Checkout from '../screens/Ecommerce/';
+import Checkout from '../screens/Ecommerce/checkOut';
+import OrderSuccess from '../screens/Ecommerce/orderSuccess';
+import HomeScreen from '../screens/Home/homeScreen';
 
 const Stack = createStackNavigator();
 
@@ -14,9 +16,11 @@ const MainNavigator = () => {
       <Stack.Screen name="MainTabs" component={BottomTabNavigator} />
 
       {/* 2. These screens will now cover the entire screen, hiding the tab bar */}
+      <Stack.Screen name='home' component={HomeScreen} />
       <Stack.Screen name="galleryDetail" component={GalleryDetail} />
       <Stack.Screen name="myCart" component={MyCart} />
-      {/* <Stack.Screen name="Checkout" component={Checkout} /> */}
+      <Stack.Screen name="checkOut" component={Checkout} />
+      <Stack.Screen name='orderSuccess' component={OrderSuccess} />
     </Stack.Navigator>
   );
 };

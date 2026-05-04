@@ -39,7 +39,7 @@ export const ecommerceService = {
     },
 
     deleteCartItem: (cartItemId) =>
-        apiClient.delete(`${DELETE_CART_ITEM_ENDPOINT}/${cartItemId}`).then(res => res.data),
+        apiClient.delete(`${DELETE_CART_ITEM_ENDPOINT}${cartItemId}`).then(res => res.data),
 
 //---------------------------------------------order----------------------------------------------
     createOrder: (orderData) =>
@@ -53,4 +53,7 @@ export const ecommerceService = {
 
     getOrderById: (orderId) =>
         apiClient.get(`${GET_ORDER_BY_ID_ENDPOINT}/${orderId}`).then(res => res.data),
+
+    getOrderHistory: (userId) =>
+        apiClient.get(`/order/user-orders/${userId}`).then(res => res.data),
 };

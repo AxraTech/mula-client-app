@@ -45,6 +45,7 @@ const useEcommerceStore = create((set, get) => ({
     },
 
     removeFromCart: async (id) => {
+        //console.log("Attempting to remove item with ID:", item.product_id);
         const originalItems = get().cartItems;
         try {
             set((state) => ({
@@ -52,9 +53,36 @@ const useEcommerceStore = create((set, get) => ({
             }));
             await ecommerceService.deleteCartItem(id);
         } catch (error) {
+            console.error("Full Error Config:", error.config.url);
             console.error("Failed to remove cart item:", error);
             set({ cartItems: originalItems });
             alert("Could not remove item. Please try again.");
+        }
+    },
+
+    placeOrder: async (orderData) => {
+        set({ loading: true });
+        try {
+            const result = await ecommerceService.createOrder(orderData);
+            
+            // If order is successful, clear the local cart items
+            set({ cartItems: [], loading: false });
+            
+            return { success: true, data: result };
+        } catch (error) {
+            set({ loading: false, error: error.message });
+            return { success: false, error: error.message };
+        }
+    },
+
+    orders: [],
+    fetchOrderHistory: async (userId) => {
+        set({ loading: true });
+        try {
+            const data = await ecommerceService.getOrderHistory(userId);
+            set({ orders: data, loading: false });
+        } catch (error) {
+            set({ error: error.message, loading: false });
         }
     },
 }));
