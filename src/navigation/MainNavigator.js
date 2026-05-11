@@ -6,6 +6,8 @@ import MyCart from '../screens/Ecommerce/myCart';
 import Checkout from '../screens/Ecommerce/checkOut';
 import OrderSuccess from '../screens/Ecommerce/orderSuccess';
 import HomeScreen from '../screens/Home/homeScreen';
+import FavoriteListScreen from '../screens/Media & Engagement/foavoriteList';
+import EditProfileScreen from '../screens/Profile/updateProfile';
 
 const Stack = createStackNavigator();
 
@@ -21,6 +23,8 @@ const MainNavigator = () => {
       <Stack.Screen name="myCart" component={MyCart} />
       <Stack.Screen name="checkOut" component={Checkout} />
       <Stack.Screen name='orderSuccess' component={OrderSuccess} />
+      <Stack.Screen name='favoriteList' component={FavoriteListScreen} />
+      <Stack.Screen name='editProfile' component={EditProfileScreen} />
     </Stack.Navigator>
   );
 };

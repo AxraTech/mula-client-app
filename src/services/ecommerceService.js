@@ -9,6 +9,8 @@ import {
     BUY_NOW_ENDPOINT,
     GET_ORDER_ENDPOINT,
     GET_ORDER_BY_ID_ENDPOINT,
+    CREATE_FAVORITE_ENDPOINT,
+    ENGAGEMENT_FAVORITE_LIST_ENDPOINT,
 } from '@env';
 
 export const ecommerceService = {
@@ -56,4 +58,11 @@ export const ecommerceService = {
 
     getOrderHistory: (userId) =>
         apiClient.get(`/order/user-orders/${userId}`).then(res => res.data),
+
+    getFavorites: (userId) => 
+        apiClient.get(`${ENGAGEMENT_FAVORITE_LIST_ENDPOINT}/${userId}`).then(res => res.data),
+    
+    toggleFavorite: (userId, productId) =>
+        apiClient.post(`${CREATE_FAVORITE_ENDPOINT}`, { userId, productId }).then(res => res.data),
+        
 };

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, KeyboardAvoidingView, Platform, Alert, Image } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, KeyboardAvoidingView, Platform, Alert, Image, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { authService } from '../../services/authService';
 import useAuthStore from '../../store/useAuthStore';
@@ -7,11 +7,13 @@ import useAuthStore from '../../store/useAuthStore';
 const Login = ({ navigation }) => {
     const [phoneNumber, setPhoneNumber] = useState('');
     const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const setAuth = useAuthStore((state) => state.setAuth);
 
     //---------------------------Login Handler-------------------------------------
     const handleLogin = async () => {
+        setLoading(true);
         try {
             const response = await authService.login(phoneNumber, password);
             console.log("Full Login Response:", response);
@@ -28,6 +30,8 @@ const Login = ({ navigation }) => {
         } catch (error) {
             console.log("Login Error:", error);
             Alert.alert("Login Failed", error.message || "Check your credentials");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -87,8 +91,12 @@ const Login = ({ navigation }) => {
                 </View>
 
                 {/*---------------------------Login Button------------------------------------- */}
-                <TouchableOpacity style={styles.button} onPress={handleLogin} activeOpacity={0.8}>
-                    <Text style={styles.buttonText}>Login</Text>
+                <TouchableOpacity style={styles.button} onPress={handleLogin} disabled={loading}>
+                    {loading ? (
+                        <ActivityIndicator color="#FFFFFF" />
+                    ) : (
+                        <Text style={styles.buttonText}>Login</Text>
+                    )}
                 </TouchableOpacity>
 
                 {/*---------------------------Sign Up------------------------------------- */}

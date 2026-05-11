@@ -85,6 +85,28 @@ const useEcommerceStore = create((set, get) => ({
             set({ error: error.message, loading: false });
         }
     },
+
+    favorites: [],
+    fetchFavorites: async (userId) => {
+        set({ loading: true });
+        try {
+            const data = await ecommerceService.getFavorites(userId);
+            set({ favorites: data, loading: false });
+        } catch (error) {
+            set({ error: error.message, loading: false });
+        }
+    },
+
+    removeFromFavorites: async (userId, productId) => {
+        try {
+            await ecommerceService.toggleFavorite(userId, productId);
+            set((state) => ({
+                favorites: state.favorites.filter(item => item.product_id !== productId)
+            }));
+        } catch (error) {
+            console.error("Failed to remove favorite:", error);
+        }
+    },
 }));
 
 export default useEcommerceStore;

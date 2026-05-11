@@ -63,7 +63,7 @@ const HomeScreen = ({ navigation }) => {
                     </View>
                 )}
                 {!item.isSold && 
-                    <TouchableOpacity style={styles.heartBtn}><Text>❤️</Text></TouchableOpacity>
+                    <TouchableOpacity style={styles.heartBtn}><Text>♡</Text></TouchableOpacity>
                 }
             </View>
             <View style={styles.infoArea}>
@@ -83,6 +83,12 @@ const HomeScreen = ({ navigation }) => {
     return (
         <View style={styles.container}>
             <View style={styles.header}>
+                <TouchableOpacity 
+                    style={styles.favoriteBtn} 
+                    onPress={() => navigation.navigate('favoriteList')}
+                >
+                    <Text style={styles.favoriteIcon}>♡</Text>
+                </TouchableOpacity>
                 <Text style={styles.logo}>M U L A</Text>
                 <Text style={styles.tagline}>Timeless Art For An Ever-Changing World</Text>
 
@@ -119,6 +125,16 @@ const HomeScreen = ({ navigation }) => {
 }
 
 const styles = StyleSheet.create({
+    favoriteBtn: {
+        position: 'absolute',
+        right: 20,
+        top: 55,
+        zIndex: 10,
+    },
+    favoriteIcon: {
+        fontSize: 22,
+        color: '#A68D60',
+    },
     container: { flex: 1, backgroundColor: '#F5F2E9' },
     header: { alignItems: 'center', paddingTop: 50, paddingBottom: 20 },
     logo: { fontSize: 24, fontWeight: 'bold', letterSpacing: 8 },
