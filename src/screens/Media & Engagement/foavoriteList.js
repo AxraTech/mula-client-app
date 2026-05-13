@@ -5,10 +5,8 @@ import useEcommerceStore from '../../store/useEcommerceStore';
 import useAuthStore from '../../store/useAuthStore';
 
 const FavoriteListScreen = ({ navigation }) => {
-    const favorites = useEcommerceStore((state) => state.favorites);
-    const loading = useEcommerceStore((state) => state.loading);
-    const fetchFavorites = useEcommerceStore((state) => state.fetchFavorites);
-    const removeFromFavorites = useEcommerceStore((state) => state.removeFromFavorites);
+    // 1. Pull the unified toggleFavorite function we updated in the store
+    const { favorites, loading, fetchFavorites, toggleFavorite } = useEcommerceStore();
     const user = useAuthStore((state) => state.user);
 
     useEffect(() => {
@@ -24,17 +22,24 @@ const FavoriteListScreen = ({ navigation }) => {
     const renderFavoriteItem = ({ item }) => (
         <TouchableOpacity 
             style={styles.card} 
-            onPress={() => navigation.navigate('productDetail', { productId: item.product_id })}
+            // 2. Map item.product_id correctly for navigation
+            onPress={() => navigation.navigate('galleryDetail', { artwork: item })}
         >
-            <Image source={{ uri: item.product_image_url }} style={styles.image} />
+            <Image 
+                source={{ uri: item.product_image_url || item.image }} 
+                style={styles.image} 
+            />
             <View style={styles.info}>
                 <Text style={styles.title} numberOfLines={1}>{item.title}</Text>
-                <Text style={styles.artist}>by {item.brand_name || 'MULA Artist'}</Text>
+                {/* 3. Handle different naming conventions from backend (artistName vs brand_name) */}
+                <Text style={styles.artist}>by {item.artistName || item.brand_name || 'MULA Artist'}</Text>
                 <Text style={styles.price}>{formatCurrency(item.price)} MMK</Text>
             </View>
+            
             <TouchableOpacity 
                 style={styles.heartBtn} 
-                onPress={() => removeFromFavorites(user.id, item.product_id)}
+                // 4. Use the toggleFavorite logic which now handles POST/DELETE internally
+                onPress={() => toggleFavorite(user.id, item.product_id || item.id)}
             >
                 <Text style={styles.heartIcon}>❤️</Text>
             </TouchableOpacity>
@@ -43,7 +48,6 @@ const FavoriteListScreen = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            {/* Header */}
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Text style={styles.backBtn}>‹</Text>
@@ -59,7 +63,8 @@ const FavoriteListScreen = ({ navigation }) => {
             ) : (
                 <FlatList
                     data={favorites}
-                    keyExtractor={(item) => item.product_id.toString()}
+                    // Use item.id (the favorite record ID) for the key
+                    keyExtractor={(item) => (item.id || item.product_id).toString()}
                     renderItem={renderFavoriteItem}
                     contentContainerStyle={styles.listContent}
                     showsVerticalScrollIndicator={false}
@@ -68,7 +73,7 @@ const FavoriteListScreen = ({ navigation }) => {
                             <Text style={styles.emptyText}>Your wishlist is empty.</Text>
                             <TouchableOpacity 
                                 style={styles.exploreBtn}
-                                onPress={() => navigation.navigate('home')}
+                                onPress={() => navigation.navigate('Shop')}
                             >
                                 <Text style={styles.exploreText}>Explore Artworks</Text>
                             </TouchableOpacity>
@@ -81,7 +86,7 @@ const FavoriteListScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: '#F9F5EB' }, // MULA Cream
+    container: { flex: 1, backgroundColor: '#F9F5EB' },
     header: { 
         flexDirection: 'row', 
         justifyContent: 'space-between', 
@@ -100,7 +105,7 @@ const styles = StyleSheet.create({
         letterSpacing: 1,
         fontFamily: Platform.OS === 'ios' ? 'Optima' : 'serif' 
     },
-    listContent: { padding: 20 },
+    listContent: { padding: 20, paddingBottom: 100 },
     card: { 
         flexDirection: 'row', 
         backgroundColor: '#FFF', 

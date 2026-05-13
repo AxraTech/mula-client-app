@@ -9,28 +9,50 @@ import {
     BUY_NOW_ENDPOINT,
     GET_ORDER_ENDPOINT,
     GET_ORDER_BY_ID_ENDPOINT,
-    CREATE_FAVORITE_ENDPOINT,
-    ENGAGEMENT_FAVORITE_LIST_ENDPOINT,
+    GET_FAVORITE_ARTWORKS_ENDPOINT, 
+    POST_FAVORITE_ARTWORKS_ENDPOINT, 
+    DELETE_FAVORITE_ARTWORKS_ENDPOINT,
+    ORDER_HISTORY_ENDPOINT,
 } from '@env';
 
 export const ecommerceService = {
-//---------------------------------------------products----------------------------------------------
+    //------------------- Products -------------------
     getProducts: () =>
         apiClient.get(GET_PRODUCTS_ENDPOINT).then(res => res.data),
 
     getProductsById: (id) =>
         apiClient.get(`${GET_PRODUCT_BY_ID_ENDPOINT}/${id}`).then(res => res.data),
 
-//---------------------------------------------cart----------------------------------------------
+    //------------------- Favorites (FIXED) -------------------
+    // Uses GET_FAVORITE_ARTWORKS_ENDPOINT which includes "?user_id="
+    getFavorites: (userId) => {
+        return apiClient.get(`${GET_FAVORITE_ARTWORKS_ENDPOINT}${userId}`).then(res => res.data);
+    },
+
+    // POST Favorite (Add)
+    addFavorite: (userId, productId) => {
+        return apiClient.post(POST_FAVORITE_ARTWORKS_ENDPOINT, {
+            input: { 
+                user_id: userId, 
+                product_id: productId 
+            }
+        });
+    },
+
+    // DELETE Favorite (Remove)
+    removeFavorite: (favoriteId) => {
+        // favoriteId is the ID of the record in the favorites table
+        return apiClient.delete(`${DELETE_FAVORITE_ARTWORKS_ENDPOINT}${favoriteId}`);
+    },
+
+    //------------------- Cart -------------------
     getCartItems: (userId) => {
-        console.log("Service sending GET request with userId:", userId);
         return apiClient.get(GET_CART_ITEM_ENDPOINT, {
             params: { user_id: userId }
         });
     },
 
     addToCart: (productId, quantity, userId) => {
-        console.log("Service sending POST request:", { productId, quantity, userId });
         return apiClient.post(CREATE_CART_ITEM_ENDPOINT, {
             input: {
                 product_id: productId,
@@ -43,7 +65,7 @@ export const ecommerceService = {
     deleteCartItem: (cartItemId) =>
         apiClient.delete(`${DELETE_CART_ITEM_ENDPOINT}${cartItemId}`).then(res => res.data),
 
-//---------------------------------------------order----------------------------------------------
+    //------------------- Orders -------------------
     createOrder: (orderData) =>
         apiClient.post(CREATE_ORDER_ENDPOINT, orderData).then(res => res.data),
 
@@ -56,13 +78,6 @@ export const ecommerceService = {
     getOrderById: (orderId) =>
         apiClient.get(`${GET_ORDER_BY_ID_ENDPOINT}/${orderId}`).then(res => res.data),
 
-    getOrderHistory: (userId) =>
-        apiClient.get(`/order/user-orders/${userId}`).then(res => res.data),
-
-    getFavorites: (userId) => 
-        apiClient.get(`${ENGAGEMENT_FAVORITE_LIST_ENDPOINT}/${userId}`).then(res => res.data),
-    
-    toggleFavorite: (userId, productId) =>
-        apiClient.post(`${CREATE_FAVORITE_ENDPOINT}`, { userId, productId }).then(res => res.data),
-        
+    getOrderHistory: () => 
+        apiClient.get(ORDER_HISTORY_ENDPOINT).then(res => res.data),
 };

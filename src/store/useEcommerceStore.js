@@ -107,6 +107,37 @@ const useEcommerceStore = create((set, get) => ({
             console.error("Failed to remove favorite:", error);
         }
     },
+
+    toggleFavorite: async (userId, productId) => {
+        const { favorites } = get();
+        // Check if it already exists in favorites list
+        const existing = favorites.find(f => f.product_id === productId || f.id === productId);
+
+        try {
+            if (existing) {
+                // Use the ID of the favorite record to delete
+                await ecommerceService.removeFavorite(existing.id);
+            } else {
+                // Add new favorite
+                await ecommerceService.addFavorite(userId, productId);
+            }
+            // Always refresh the list after a change
+            const updated = await ecommerceService.getFavorites(userId);
+            set({ favorites: updated.all || updated }); // Handle if API returns { all: [...] }
+        } catch (error) {
+            console.log("Store Toggle Error:", error.response?.data || error.message);
+        }
+    },
+
+    fetchOrderHistory: async () => {
+        set({ loading: true });
+        try {
+            const response = await ecommerceService.getOrderHistory();
+            set({ orders: response.data || [], loading: false });
+        } catch (error) {
+            set({ error: error.message, loading: false });
+        }
+    },
 }));
 
 export default useEcommerceStore;

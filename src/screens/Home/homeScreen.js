@@ -2,11 +2,14 @@ import React, { useEffect, useState } from "react";
 import { View, Text, Image, StyleSheet, ScrollView, ActivityIndicator, TouchableOpacity, Dimensions } from "react-native";
 import { getHomeData } from "../../services/homeAPI";
 import useAuthStore from "../../store/useAuthStore";
+import useEcommerceStore from "../../store/useEcommerceStore";
 
 const { width } = Dimensions.get('window');
 
 const HomeScreen = ({ navigation }) => {
     const token = useAuthStore((state) => state.token);
+    const user = useAuthStore((state) => state.token ? useAuthStore.getState().user : null);
+    const { favorites, toggleFavorite } = useEcommerceStore();
     const [ rawData, setRawData ] = useState(null);
     const [ filteredData, setFilteredData ] = useState([]);
     const [ activeTab, setActiveTab ] = useState('All');
@@ -46,26 +49,41 @@ const HomeScreen = ({ navigation }) => {
         else if (tab === 'Digital') setFilteredData(rawData.digitalArt);
     };
 
-    const ArtCard = ({ item, navigation }) => (
-        <TouchableOpacity 
-            style={styles.cardContainer} 
-            activeOpacity={0.9}
-            onPress={() => navigation.navigate('galleryDetail', { artwork: item })} // Ensure 'ArtworkDetail' matches your Stack Navigator name
-        >
-            <View style={styles.hangingThread} />
-            <View style={styles.dot} />
-            
-            <View style={styles.imageWrapper}>
-                <Image source={{ uri: item.image }} style={styles.artImage} />
-                {item.isSold && (
-                    <View style={styles.soldBadge}>
-                        <Text style={styles.soldText}>SOLD</Text>
-                    </View>
-                )}
-                {!item.isSold && 
-                    <TouchableOpacity style={styles.heartBtn}><Text>♡</Text></TouchableOpacity>
-                }
-            </View>
+    const ArtCard = ({ item, navigation }) => {
+        // Check if this item is in the favorites list
+        const isFav = favorites.some(fav => fav.product_id === item.id || fav.id === item.id || fav.product_id === item.product_id);
+
+        return (
+            <TouchableOpacity 
+                style={styles.cardContainer} 
+                onPress={() => navigation.navigate('galleryDetail', { artwork: item })}
+            >
+                <View style={styles.hangingThread} />
+                <View style={styles.dot} />
+                
+                <View style={styles.imageWrapper}>
+                    <Image source={{ uri: item.image }} style={styles.artImage} />
+                    {item.isSold && (
+                        <View style={styles.soldBadge}>
+                            <Text style={styles.soldText}>SOLD</Text>
+                        </View>
+                    )}
+                    {!item.isSold && (
+                        // In ArtCard component
+                        <TouchableOpacity 
+                            style={styles.heartBtn}
+                            onPress={() => {
+                                // Log this to your console to verify the IDs before the call
+                                console.log("Toggling for User:", user?.id, "Product:", item.id);
+                                toggleFavorite(user?.id, item.id);
+                            }}
+                        >
+                            <Text style={{ fontSize: 18, color: isFav ? 'red' : '#A68D60' }}>
+                                {isFav ? '❤️' : '♡'}
+                            </Text>
+                        </TouchableOpacity>
+                    )}
+                </View>
             <View style={styles.infoArea}>
                 <Text style={styles.titleText}>{item.title}</Text>
                 <Text style={styles.artistText}>{item.artistName}</Text>
@@ -76,7 +94,8 @@ const HomeScreen = ({ navigation }) => {
                 )}
             </View>
         </TouchableOpacity>
-    );
+        );
+    };
 
     if (loading) return <ActivityIndicator style={{ flex: 1 }} />;
 
