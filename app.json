@@ -25,22 +25,17 @@
     },
     "plugins": [
       "expo-router",
-      [
-        "expo-font",
-        {
-          "fonts": [
-            "./node_modules/@expo-google-fonts/poppins/Poppins_400Regular.ttf",
-            "./node_modules/@expo-google-fonts/poppins/Poppins_500Medium.ttf",
-            "./node_modules/@expo-google-fonts/poppins/Poppins_600SemiBold.ttf",
-            "./node_modules/@expo-google-fonts/poppins/Poppins_700Bold.ttf"
-          ]
-        }
-      ],
+      "expo-font",
       "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "cde9bdac-7ef1-4d9f-9ef6-5f8c40eaaeea"
+      }
     }
   }
 }
