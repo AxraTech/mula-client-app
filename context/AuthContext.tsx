@@ -174,6 +174,7 @@ function deepFindUser(obj: any, depth = 0): MulaUser | null {
 }
 
 function isSuccessResponse(res: any): boolean {
+  
   if (!res || typeof res !== "object") return false;
   const msg: string = (
     res?.message ??
