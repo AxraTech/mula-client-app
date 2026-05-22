@@ -1,0 +1,46 @@
+{
+  "expo": {
+    "name": "Mula Art Gallery",
+    "slug": "mula-gallery",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/logos.png",
+    "scheme": "mula-gallery",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/images/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#FFFFFF"
+    },
+    "ios": {
+      "supportsTablet": false
+    },
+    "android": {
+      "package": "com.mula.artgallery",
+      "backgroundColor": "#F5F0E8"
+    },
+    "web": {
+      "favicon": "./assets/images/logos.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./node_modules/@expo-google-fonts/poppins/Poppins_400Regular.ttf",
+            "./node_modules/@expo-google-fonts/poppins/Poppins_500Medium.ttf",
+            "./node_modules/@expo-google-fonts/poppins/Poppins_600SemiBold.ttf",
+            "./node_modules/@expo-google-fonts/poppins/Poppins_700Bold.ttf"
+          ]
+        }
+      ],
+      "expo-web-browser"
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    }
+  }
+}
