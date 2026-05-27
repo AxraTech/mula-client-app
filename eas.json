@@ -22,7 +22,8 @@
     },
     "production": {
       "android": {
-        "buildType": "app-bundle"
+        "buildType": "app-bundle",
+        "enableProguardInReleaseBuilds": true
       },
       "env": {
         "EXPO_PUBLIC_MULA_URL": "https://api.mula.com.mm"
