@@ -7,7 +7,7 @@ import {
   Dimensions,
 } from "react-native";
 import { useLocalSearchParams, useRouter, Stack } from "expo-router";
-import { Video, ResizeMode } from "expo-av";
+import { VideoView, useVideoPlayer } from "expo-video";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTheme } from "@/context/ThemeContext";
 import { X } from "lucide-react-native";
@@ -23,6 +23,11 @@ export default function VideoPlayerScreen() {
   const [error, setError] = useState<string | null>(null);
 
   const videoUrl = url || null;
+
+  const player = useVideoPlayer(videoUrl, (player) => {
+    player.loop = true;
+    player.play();
+  });
 
   if (!videoUrl) {
     return (
@@ -61,14 +66,10 @@ export default function VideoPlayerScreen() {
             <Text style={styles.errorText}>{error}</Text>
           </View>
         ) : (
-          <Video
+          <VideoView
             style={styles.video}
-            source={{ uri: videoUrl }}
-            useNativeControls
-            resizeMode={ResizeMode.CONTAIN}
-            isLooping
-            shouldPlay
-            onError={() => setError("Failed to load video")}
+            player={player}
+            contentFit="contain"
           />
         )}
       </View>

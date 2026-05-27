@@ -7,11 +7,12 @@
     "dev": "expo start --localhost --port 8082",
     "build": "node scripts/build.js",
     "serve": "node server/serve.js",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "android": "expo run:android",
+    "ios": "expo run:ios"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
-    "@expo-google-fonts/inter": "^0.4.0",
     "@expo/cli": "54.0.23",
     "@expo/ngrok": "^4.1.0",
     "@expo/vector-icons": "^15.0.3",
@@ -56,8 +57,10 @@
   },
   "dependencies": {
     "@expo-google-fonts/poppins": "^0.4.1",
-    "expo-av": "^16.0.8",
     "expo-video": "^55.0.17",
-    "lucide-react-native": "^1.16.0"
+    "lucide-react-native": "^1.16.0",
+    "expo": "~54.0.34",
+    "react": "19.1.0",
+    "react-native": "0.81.5"
   }
 }

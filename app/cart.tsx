@@ -297,7 +297,7 @@ const styles = StyleSheet.create({
   itemImage: { width: 80, height: 96, borderRadius: 12 },
   imageAccentLine: { position: "absolute", left: 0, top: 0, bottom: 0, width: 3 },
   itemInfo: { flex: 1, paddingHorizontal: 14, gap: 3 },
-  itemTitle: { fontSize: 14, fontFamily: "Poppins_600SemiBold", color: "#1A1A2E", lineHeight: 20 },
+  itemTitle: { fontSize: 14, fontFamily: "Poppins_600SemiBold", color: "#1A1A2E", lineHeight: 32 },
   itemArtist: { fontSize: 12, fontFamily: "Poppins_400Regular", color: "#6B7280" },
   mediumPill: {
     flexDirection: "row", alignItems: "center", gap: 4,
