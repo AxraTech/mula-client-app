@@ -14,6 +14,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import * as Haptics from "expo-haptics";
 import { useCart } from "@/context/CartContext";
+import { ArtistNameLink } from "@/components/ArtistNameLink";
 import { useTheme } from "@/context/ThemeContext";
 import { ConfirmModal } from "@/components/ConfirmModal";
 
@@ -115,9 +116,13 @@ export default function CartScreen() {
                     <Text style={styles.itemTitle} numberOfLines={2}>
                       {item.artwork.title}
                     </Text>
-                    <Text style={styles.itemArtist} numberOfLines={1}>
-                      {item.artwork.artist}
-                    </Text>
+                    <ArtistNameLink
+                      name={item.artwork.artist}
+                      artistId={item.artwork.artistId}
+                      style={styles.itemArtist}
+                      linkStyle={{ color: GOLD }}
+                      numberOfLines={1}
+                    />
                     {!!item.artwork.medium && (
                       <View style={styles.mediumPill}>
                         <Tag size={9} color={GOLD} strokeWidth={2} />
@@ -259,7 +264,7 @@ const styles = StyleSheet.create({
   },
   backBtn: { width: 36, height: 36, alignItems: "center", justifyContent: "center" },
   headerCenter: { flex: 1, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8 },
-  headerTitle: { fontSize: 18, fontFamily: "Poppins_600SemiBold", color: "#1A1A2E", letterSpacing: 0.3 },
+  headerTitle: { fontSize: 19, fontFamily: "Poppins_600SemiBold", color: "#1A1A2E", letterSpacing: 0.3 },
   itemCountBadge: {
     backgroundColor: GOLD,
     borderRadius: 10,
@@ -269,8 +274,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingHorizontal: 6,
   },
-  itemCountText: { fontSize: 11, fontFamily: "Poppins_700Bold", color: "#fff" },
-  clearText: { fontSize: 12, fontFamily: "Poppins_500Medium", color: "#9CA3AF", width: 60, textAlign: "right" },
+  itemCountText: { fontSize: 12, fontFamily: "Poppins_700Bold", color: "#fff" },
+  clearText: { fontSize: 13, fontFamily: "Poppins_500Medium", color: "#9CA3AF", width: 60, textAlign: "right" },
 
   goldRule: { height: 1.5, marginHorizontal: 20, backgroundColor: GOLD_LIGHT, marginBottom: 8 },
 
@@ -282,11 +287,11 @@ const styles = StyleSheet.create({
     alignItems: "center", justifyContent: "center",
     marginBottom: 4,
   },
-  emptyTitle: { fontSize: 20, fontFamily: "Poppins_600SemiBold", color: "#1A1A2E" },
-  emptyText: { fontSize: 13, fontFamily: "Poppins_400Regular", color: "#9CA3AF", textAlign: "center", lineHeight: 20 },
+  emptyTitle: { fontSize: 21, fontFamily: "Poppins_600SemiBold", color: "#1A1A2E" },
+  emptyText: { fontSize: 14, fontFamily: "Poppins_400Regular", color: "#9CA3AF", textAlign: "center", lineHeight: 21 },
   browseBtn: { borderRadius: 24, overflow: "hidden", marginTop: 8 },
   browseBtnGrad: { paddingHorizontal: 36, paddingVertical: 13 },
-  browseBtnText: { fontSize: 14, fontFamily: "Poppins_600SemiBold", color: "#fff" },
+  browseBtnText: { fontSize: 15, fontFamily: "Poppins_600SemiBold", color: "#fff" },
 
   /* Content */
   content: { paddingHorizontal: 20, paddingTop: 8 },
@@ -297,8 +302,8 @@ const styles = StyleSheet.create({
   itemImage: { width: 80, height: 96, borderRadius: 12 },
   imageAccentLine: { position: "absolute", left: 0, top: 0, bottom: 0, width: 3 },
   itemInfo: { flex: 1, paddingHorizontal: 14, gap: 3 },
-  itemTitle: { fontSize: 14, fontFamily: "Poppins_600SemiBold", color: "#1A1A2E", lineHeight: 32 },
-  itemArtist: { fontSize: 12, fontFamily: "Poppins_400Regular", color: "#6B7280" },
+  itemTitle: { fontSize: 15, fontFamily: "Poppins_600SemiBold", color: "#1A1A2E", lineHeight: 33 },
+  itemArtist: { fontSize: 13, fontFamily: "Poppins_400Regular", color: "#6B7280" },
   mediumPill: {
     flexDirection: "row", alignItems: "center", gap: 4,
     alignSelf: "flex-start",
@@ -306,15 +311,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 7, paddingVertical: 2,
     borderRadius: 6, marginTop: 2,
   },
-  mediumText: { fontSize: 10, fontFamily: "Poppins_500Medium", color: GOLD_DARK },
+  mediumText: { fontSize: 11, fontFamily: "Poppins_500Medium", color: GOLD_DARK },
   priceRow: { flexDirection: "row", alignItems: "center", gap: 4, marginTop: 6 },
-  itemPrice: { fontSize: 15, fontFamily: "Poppins_700Bold" },
-  currency: { fontSize: 11, fontFamily: "Poppins_400Regular", color: "#9CA3AF", marginTop: 2 },
+  itemPrice: { fontSize: 16, fontFamily: "Poppins_700Bold" },
+  currency: { fontSize: 12, fontFamily: "Poppins_400Regular", color: "#9CA3AF", marginTop: 2 },
   qtyBadge: {
     backgroundColor: "#F3F4F6", borderRadius: 6,
     paddingHorizontal: 6, paddingVertical: 1, marginLeft: 4,
   },
-  qtyText: { fontSize: 11, fontFamily: "Poppins_600SemiBold", color: "#6B7280" },
+  qtyText: { fontSize: 12, fontFamily: "Poppins_600SemiBold", color: "#6B7280" },
   removeBtn: { padding: 8 },
   itemSeparator: { height: 1, backgroundColor: "#F3F4F6", marginHorizontal: 4 },
 
@@ -332,15 +337,15 @@ const styles = StyleSheet.create({
       android: { elevation: 2 },
     }),
   },
-  summaryHeading: { fontSize: 13, fontFamily: "Poppins_600SemiBold", color: "#1A1A2E", letterSpacing: 0.8, textTransform: "uppercase", marginBottom: 2 },
+  summaryHeading: { fontSize: 14, fontFamily: "Poppins_600SemiBold", color: "#1A1A2E", letterSpacing: 0.8, textTransform: "uppercase", marginBottom: 2 },
   summaryRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
   deliveryRow: { flexDirection: "row", alignItems: "center", gap: 6 },
-  summaryLabel: { fontSize: 13, fontFamily: "Poppins_400Regular", color: "#6B7280" },
-  summaryValue: { fontSize: 13, fontFamily: "Poppins_600SemiBold", color: "#1A1A2E" },
+  summaryLabel: { fontSize: 14, fontFamily: "Poppins_400Regular", color: "#6B7280" },
+  summaryValue: { fontSize: 14, fontFamily: "Poppins_600SemiBold", color: "#1A1A2E" },
   summaryDivider: { height: 1, backgroundColor: "#F0EBD8" },
   totalRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
-  totalLabel: { fontSize: 15, fontFamily: "Poppins_600SemiBold", color: "#1A1A2E" },
-  totalValue: { fontSize: 18, fontFamily: "Poppins_700Bold" },
+  totalLabel: { fontSize: 16, fontFamily: "Poppins_600SemiBold", color: "#1A1A2E" },
+  totalValue: { fontSize: 19, fontFamily: "Poppins_700Bold" },
 
   /* Payment chips */
   paymentRow: { flexDirection: "row", flexWrap: "wrap", gap: 8, marginTop: 16, marginBottom: 4 },
@@ -349,7 +354,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12, paddingVertical: 5,
     backgroundColor: "#fff",
   },
-  payChipText: { fontSize: 11, fontFamily: "Poppins_600SemiBold" },
+  payChipText: { fontSize: 12, fontFamily: "Poppins_600SemiBold" },
 
   /* Bottom checkout bar */
   bottomBar: {
@@ -371,12 +376,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 10,
   },
-  checkoutBtnText: { fontSize: 15, fontFamily: "Poppins_600SemiBold", color: "#fff" },
+  checkoutBtnText: { fontSize: 16, fontFamily: "Poppins_600SemiBold", color: "#fff" },
   checkoutPricePill: {
     backgroundColor: "rgba(255,255,255,0.22)",
     borderRadius: 12,
     paddingHorizontal: 10,
     paddingVertical: 3,
   },
-  checkoutPriceText: { fontSize: 13, fontFamily: "Poppins_700Bold", color: "#fff" },
+  checkoutPriceText: { fontSize: 14, fontFamily: "Poppins_700Bold", color: "#fff" },
 });

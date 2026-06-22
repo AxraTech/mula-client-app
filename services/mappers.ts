@@ -370,16 +370,9 @@ export function mapProduct(item: any, idx = 0): Artwork {
 }
 
 export function mapArtist(item: any): Artist {
-  if (__DEV__) {
-    console.log("[mapper:artist] keys:", Object.keys(item));
-  }
   const avatarUrl = resolveImage(item, 2);
   const rawBio = item.bio ?? item.biography ?? item.description ?? item.about ?? "";
   const bio = rawBio ? stripHtml(String(rawBio)) : "Myanmar artist";
-  if (__DEV__) {
-    console.log("[mapper:artist] bio raw:", JSON.stringify(rawBio).slice(0, 200));
-    console.log("[mapper:artist] bio clean:", bio.slice(0, 200));
-  }
   return {
     id: String(item.id ?? item.artist_id ?? item._id ?? ""),
     name: item.fullname ?? item.name ?? item.artist_name ?? "Unknown Artist",
@@ -502,9 +495,6 @@ export function mapArticle(item: any): Article {
   const rawContent = item.description_1 ?? item.description_2 ?? item.description_3 ?? "";
   const content = stripHtml(rawContent);
   const category = item.category_name ?? item.category ?? "Art";
-  
-  // Debug: log category data
-  console.log("[Article]", title, "category:", item.category_name, item.category, "→", category);
   
   return {
     id: String(item.id ?? ""),

@@ -14,38 +14,38 @@ export function useTextStyles() {
     // Common text styles with fonts
     body: {
       fontFamily: fonts.regular,
-      fontSize: 14,
-      lineHeight: 20,
+      fontSize: 15,
+      lineHeight: 21,
     },
     bodyMedium: {
       fontFamily: fonts.medium,
-      fontSize: 14,
-      lineHeight: 20,
+      fontSize: 15,
+      lineHeight: 21,
     },
     title: {
       fontFamily: fonts.semiBold,
-      fontSize: 18,
-      lineHeight: 26,
+      fontSize: 19,
+      lineHeight: 27,
     },
     subtitle: {
       fontFamily: fonts.medium,
-      fontSize: 16,
-      lineHeight: 22,
+      fontSize: 17,
+      lineHeight: 23,
     },
     caption: {
       fontFamily: fonts.regular,
-      fontSize: 12,
-      lineHeight: 16,
+      fontSize: 13,
+      lineHeight: 17,
     },
     button: {
       fontFamily: fonts.medium,
-      fontSize: 14,
-      lineHeight: 20,
+      fontSize: 15,
+      lineHeight: 21,
     },
     price: {
       fontFamily: fonts.semiBold,
-      fontSize: 13,
-      lineHeight: 18,
+      fontSize: 14,
+      lineHeight: 19,
     },
   };
 }

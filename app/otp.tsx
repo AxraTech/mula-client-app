@@ -97,7 +97,7 @@ export default function OtpScreen() {
       });
       setLoading(false);
       if (result.success) {
-        router.replace("/");
+        router.replace("/(tabs)");
       } else {
         setError(result.error ?? "Invalid OTP. Please try again.");
         shake();
@@ -270,17 +270,17 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   title: {
-    fontSize: 24,
+    fontSize: 25,
     fontFamily: "Poppins_700Bold",
     color: "#1A1A2E",
     letterSpacing: -0.3,
   },
   subtitle: {
-    fontSize: 14,
+    fontSize: 15,
     fontFamily: "Poppins_400Regular",
     color: "#9CA3AF",
     textAlign: "center",
-    lineHeight: 22,
+    lineHeight: 23,
     marginTop: -8,
   },
   phoneHighlight: {
@@ -299,7 +299,7 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     borderColor: "#EBEBEB",
     backgroundColor: "#FAFAFA",
-    fontSize: 22,
+    fontSize: 23,
     fontFamily: "Poppins_700Bold",
     color: "#1A1A2E",
   },
@@ -310,7 +310,7 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: "#EF4444",
-    fontSize: 13,
+    fontSize: 14,
     fontFamily: "Poppins_500Medium",
     textAlign: "center",
   },
@@ -332,7 +332,7 @@ const styles = StyleSheet.create({
   },
   verifyBtnText: {
     color: "#FFFFFF",
-    fontSize: 16,
+    fontSize: 17,
     fontFamily: "Poppins_700Bold",
     letterSpacing: 0.3,
   },
@@ -346,12 +346,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   resendText: {
-    fontSize: 13,
+    fontSize: 14,
     fontFamily: "Poppins_400Regular",
     color: "#9CA3AF",
   },
   resendLink: {
-    fontSize: 13,
+    fontSize: 14,
     fontFamily: "Poppins_700Bold",
     color: "#D4AF37",
   },

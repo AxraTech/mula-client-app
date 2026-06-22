@@ -57,7 +57,7 @@ export function ArtModeToggle() {
       >
         <Feather name="edit-2" size={14} color={mode === "manual" ? "#fff" : theme.textLight} />
         <Text style={[styles.optionText, { color: mode === "manual" ? "#fff" : theme.textLight }]}>
-          Manual
+          Contemporary
         </Text>
       </Pressable>
       <Pressable
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   optionText: {
-    fontSize: 13,
+    fontSize: 14,
     fontWeight: "700",
   },
 });

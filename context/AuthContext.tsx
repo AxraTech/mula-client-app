@@ -3,6 +3,8 @@ import React, {
   useContext,
   useState,
   useEffect,
+  useCallback,
+  useMemo,
   ReactNode,
 } from "react";
 import { api } from "@/services/api";
@@ -173,8 +175,62 @@ function deepFindUser(obj: any, depth = 0): MulaUser | null {
   return null;
 }
 
+function isTokenExpired(token: string): boolean {
+  const payload = decodeJWT(token);
+  if (!payload?.exp) return false;
+  return Date.now() >= payload.exp * 1000;
+}
+
+function buildUserFromSession(
+  token: string,
+  savedUser: MulaUser | null
+): MulaUser {
+  const payload = decodeJWT(token);
+  let user: MulaUser | null = savedUser;
+
+  if (user && String(user.id).length > 9 && payload?.user_id) {
+    user = { ...user, id: payload.user_id };
+  }
+
+  if (!user?.id && payload?.user_id) {
+    user = {
+      id: payload.user_id,
+      phone: user?.phone ?? payload.phone ?? payload.sub,
+      fullname: user?.fullname,
+      name: user?.name,
+      email: user?.email,
+    };
+  }
+
+  if (!user) {
+    user = {
+      id: payload?.user_id ?? payload?.sub ?? "session",
+      phone: payload?.phone ?? payload?.sub,
+    };
+  }
+
+  return user;
+}
+
+function parseProfileResponse(res: any): Partial<MulaUser> | null {
+  const data = res?.data ?? res?.user ?? res?.profile ?? res;
+  if (!data || typeof data !== "object") return null;
+
+  return {
+    id: data.id ?? data.user_id,
+    fullname: data.fullname ?? data.full_name ?? data.name,
+    name: data.name,
+    phone: data.phone,
+    email: data.email,
+    address: data.address,
+    gender: data.gender,
+    dob: data.dob ?? data.date_of_birth,
+    avatar: data.avatar,
+    profile_image_url: data.profile_image_url ?? data.avatar,
+  };
+}
+
 function isSuccessResponse(res: any): boolean {
-  
   if (!res || typeof res !== "object") return false;
   const msg: string = (
     res?.message ??
@@ -210,21 +266,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           storage.getToken(),
           storage.getUser<MulaUser>(),
         ]);
-        if (savedToken) {
-          setToken(savedToken);
-          // If saved user has phone as ID, extract real ID from token
-          let userData = savedUser;
-          if (savedUser && String(savedUser.id).length > 9) {
-            const tokenPayload = decodeJWT(savedToken);
-            if (tokenPayload?.user_id) {
-              userData = { ...savedUser, id: tokenPayload.user_id };
-              await storage.setUser(userData);
-              if (__DEV__) {
-                console.log("[Auth] Restored user_id from JWT:", tokenPayload.user_id);
-              }
-            }
+
+        if (!savedToken || isTokenExpired(savedToken)) {
+          if (savedToken) {
+            await storage.clear();
           }
-          setUser(userData);
+          return;
+        }
+
+        let userData = buildUserFromSession(savedToken, savedUser);
+        setToken(savedToken);
+        setUser(userData);
+        await storage.setUser(userData);
+
+        try {
+          const profileRes = await api.user.getProfile();
+          const fresh = parseProfileResponse(profileRes);
+          if (fresh) {
+            userData = { ...userData, ...fresh };
+            if (!userData.id && fresh.id) userData.id = fresh.id;
+            await storage.setUser(userData);
+            setUser(userData);
+          }
+        } catch (e: any) {
+          if (e?.status === 401 || e?.status === 403) {
+            await storage.clear();
+            setToken(null);
+            setUser(null);
+          }
         }
       } catch {
       } finally {
@@ -234,7 +303,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     restore();
   }, []);
 
-  const signin = async (phone: string, password: string) => {
+  const signin = useCallback(async (phone: string, password: string) => {
     try {
       const res = await api.auth.signin(phone, password);
 
@@ -267,6 +336,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (accessToken) {
         await storage.setToken(accessToken);
         await storage.setUser(userData);
+        await storage.setWelcomeSeen();
         setToken(accessToken);
         setUser(userData);
         return { success: true };
@@ -296,9 +366,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch (e: any) {
       return { success: false, error: e?.message ?? "Login failed" };
     }
-  };
+  }, []);
 
-  const signup = async (input: {
+  const signup = useCallback(async (input: {
     phone: string;
     password: string;
     fullname: string;
@@ -324,6 +394,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (accessToken) {
         await storage.setToken(accessToken);
         await storage.setUser(userData);
+        await storage.setWelcomeSeen();
         setToken(accessToken);
         setUser(userData);
         return { success: true };
@@ -350,9 +421,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch (e: any) {
       return { success: false, error: e?.message ?? "Signup failed" };
     }
-  };
+  }, []);
 
-  const requestOtp = async (phone: string) => {
+  const requestOtp = useCallback(async (phone: string) => {
     try {
       const res = await api.auth.requestOtp(phone);
       if (__DEV__) {
@@ -367,32 +438,38 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch (e: any) {
       return { success: false, error: e?.message ?? "OTP request failed" };
     }
-  };
+  }, []);
 
-  const logout = async () => {
+  const logout = useCallback(async () => {
     await storage.clear();
     setUser(null);
     setToken(null);
-  };
+  }, []);
 
-  const updateUser = (data: Partial<MulaUser>) => {
-    setUser((prev) => (prev ? { ...prev, ...data } : (data as MulaUser)));
-  };
+  const updateUser = useCallback((data: Partial<MulaUser>) => {
+    setUser((prev) => {
+      const next = prev ? { ...prev, ...data } : (data as MulaUser);
+      storage.setUser(next).catch(() => {});
+      return next;
+    });
+  }, []);
+
+  const isAuthenticated = !!token;
+
+  const value = useMemo(() => ({
+    user,
+    token,
+    isAuthenticated,
+    isLoading,
+    signin,
+    signup,
+    requestOtp,
+    logout,
+    updateUser,
+  }), [user, token, isAuthenticated, isLoading, signin, signup, requestOtp, logout, updateUser]);
 
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        token,
-        isAuthenticated: !!user && !!token,
-        isLoading,
-        signin,
-        signup,
-        requestOtp,
-        logout,
-        updateUser,
-      }}
-    >
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );

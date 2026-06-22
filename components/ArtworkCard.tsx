@@ -10,6 +10,7 @@ import { Image } from "expo-image";
 import { Feather } from "@expo/vector-icons";
 import { Artwork } from "@/constants/data";
 import { useTheme } from "@/context/ThemeContext";
+import { ArtistNameLink } from "@/components/ArtistNameLink";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const CARD_WIDTH = (SCREEN_WIDTH - 48) / 2;
@@ -55,7 +56,7 @@ export function ArtworkCard({ artwork, onPress, isLiked, onToggleLike }: Artwork
         />
         <View style={[styles.typeBadge, { backgroundColor: typeBadgeBg }]}>
           <Text style={[styles.typeBadgeText, { fontFamily: fonts.semiBold }]}>
-            {artwork.type === "manual" ? "Manual" : "Digital"}
+            {artwork.type === "manual" ? "Contemporary" : "Digital"}
           </Text>
         </View>
         <Pressable style={styles.likeBtn} onPress={onToggleLike} hitSlop={8}>
@@ -77,9 +78,14 @@ export function ArtworkCard({ artwork, onPress, isLiked, onToggleLike }: Artwork
         <Text style={[styles.title, { color: theme.text, fontFamily: fonts.semiBold }]} numberOfLines={1}>
           {artwork.title}
         </Text>
-        <Text style={[styles.artist, { color: theme.textLight, fontFamily: fonts.regular }]} numberOfLines={1}>
-          by {artwork.artist}
-        </Text>
+        <ArtistNameLink
+          name={artwork.artist}
+          artistId={artwork.artistId}
+          prefix="by "
+          style={[styles.artist, { color: theme.textLight, fontFamily: fonts.regular }]}
+          linkStyle={{ color: accent }}
+          numberOfLines={1}
+        />
         <Text style={[styles.price, { color: artwork.isSoldOut ? theme.red : accent, fontFamily: fonts.semiBold }]}>
           {artwork.isSoldOut ? "Sold Out" : `${artwork.price.toLocaleString()} ${artwork.currency}`}
         </Text>
@@ -125,7 +131,7 @@ const styles = StyleSheet.create({
   },
   typeBadgeText: {
     color: "#fff",
-    fontSize: 9,
+    fontSize: 10,
     letterSpacing: 0.5,
   },
   likeBtn: {
@@ -155,11 +161,11 @@ const styles = StyleSheet.create({
   },
   soldText: {
     color: "#fff",
-    fontSize: 10,
+    fontSize: 11,
     letterSpacing: 1.5,
   },
   info: { padding: 10 },
-  title: { fontSize: 13, marginBottom: 2 },
-  artist: { fontSize: 11, marginBottom: 6 },
-  price: { fontSize: 13 },
+  title: { fontSize: 14, marginBottom: 2 },
+  artist: { fontSize: 12, marginBottom: 6 },
+  price: { fontSize: 14 },
 });

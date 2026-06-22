@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -32,6 +32,35 @@ import { mapProduct } from "@/services/mappers";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const ALL_FILTER_ID = "__all__";
+
+const shopPressHandlers = new Map<string, () => void>();
+function getShopPress(id: string) {
+  let fn = shopPressHandlers.get(id);
+  if (!fn) {
+    fn = () => router.push({ pathname: "/artwork/[id]", params: { id, from: "shop" } });
+    shopPressHandlers.set(id, fn);
+  }
+  return fn;
+}
+
+const MemoShopItem = React.memo(
+  function ShopItem({ artwork, index, liked, digital }: { artwork: Artwork; index: number; liked: boolean; digital: boolean }) {
+    return (
+      <GalleryPainting
+        artwork={artwork}
+        index={index}
+        onPress={getShopPress(artwork.id)}
+        isLiked={liked}
+        showPrice
+        digital={digital}
+      />
+    );
+  },
+  (prev, next) =>
+    prev.artwork.id === next.artwork.id &&
+    prev.liked === next.liked &&
+    prev.digital === next.digital
+);
 const ITEMS_PER_PAGE = 10; // Smaller page size for faster load
 
 type ArtMode = "traditional" | "digital";
@@ -445,18 +474,12 @@ export default function ShopScreen() {
             {[leftCol, rightCol].map((col, colIdx) => (
               <View key={colIdx} style={styles.column}>
                 {col.map((artwork, idx) => (
-                  <GalleryPainting
+                  <MemoShopItem
                     key={artwork.id}
                     artwork={artwork}
                     index={idx}
-                    onPress={() =>
-                      router.push({
-                        pathname: "/artwork/[id]",
-                        params: { id: artwork.id, from: "shop" },
-                      })
-                    }
-                    isLiked={isLiked(artwork.id)}
-                    showPrice={true}
+                    liked={isLiked(artwork.id)}
+                    digital={isDigital}
                   />
                 ))}
               </View>
@@ -516,11 +539,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   brandMark: {
-    fontSize: 22,
+    fontSize: 23,
     letterSpacing: 6,
   },
   brandSub: {
-    fontSize: 8,
+    fontSize: 9,
     letterSpacing: 3,
     marginTop: 2,
   },
@@ -539,7 +562,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingHorizontal: 4,
   },
-  badgeText: { fontSize: 9 },
+  badgeText: { fontSize: 10 },
   searchWrapper: {
     flexDirection: "row",
     alignItems: "center",
@@ -552,7 +575,7 @@ const styles = StyleSheet.create({
     height: 42,
     gap: 8,
   },
-  searchInput: { flex: 1, fontSize: 14 },
+  searchInput: { flex: 1, fontSize: 15 },
   filterRow: {
     flexDirection: "row",
     gap: 8,
@@ -566,9 +589,9 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     borderWidth: 1,
   },
-  filterText: { fontSize: 11, letterSpacing: 0.5 },
+  filterText: { fontSize: 12, letterSpacing: 0.5 },
   countText: {
-    fontSize: 11,
+    fontSize: 12,
     letterSpacing: 0.5,
     fontStyle: "italic",
   },
@@ -581,7 +604,7 @@ const styles = StyleSheet.create({
   },
   column: { flex: 1, gap: 16 },
   empty: { alignItems: "center", paddingVertical: 60, gap: 12 },
-  emptyText: { fontSize: 14 },
+  emptyText: { fontSize: 15 },
   loadMoreContainer: {
     alignItems: "center",
     paddingVertical: 20,
@@ -590,7 +613,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   loadMoreText: {
-    fontSize: 12,
+    fontSize: 13,
     letterSpacing: 0.3,
   },
 });

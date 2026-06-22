@@ -314,14 +314,14 @@ const styles = StyleSheet.create({
     height: 56,
   },
   title: {
-    fontSize: 24,
+    fontSize: 25,
     fontFamily: "Poppins_700Bold",
     color: "#1A1A2E",
     letterSpacing: -0.3,
     marginBottom: 4,
   },
   subtitle: {
-    fontSize: 13,
+    fontSize: 14,
     fontFamily: "Poppins_400Regular",
     color: "#9CA3AF",
   },
@@ -331,7 +331,7 @@ const styles = StyleSheet.create({
     marginBottom: 14,
   },
   inputLabel: {
-    fontSize: 12,
+    fontSize: 13,
     fontFamily: "Poppins_600SemiBold",
     color: "#374151",
     marginBottom: 6,
@@ -349,7 +349,7 @@ const styles = StyleSheet.create({
   inputIcon: { marginRight: 10 },
   input: {
     flex: 1,
-    fontSize: 14,
+    fontSize: 15,
     fontFamily: "Poppins_400Regular",
     color: "#1A1A2E",
   },
@@ -381,7 +381,7 @@ const styles = StyleSheet.create({
     borderColor: "#D4AF37",
   },
   genderText: {
-    fontSize: 15,
+    fontSize: 16,
     fontFamily: "Poppins_700Bold",
     color: "#D4AF37",
   },
@@ -391,7 +391,7 @@ const styles = StyleSheet.create({
 
   errorText: {
     color: "#EF4444",
-    fontSize: 12,
+    fontSize: 13,
     fontFamily: "Poppins_500Medium",
     textAlign: "center",
     marginBottom: 8,
@@ -416,7 +416,7 @@ const styles = StyleSheet.create({
   },
   submitBtnText: {
     color: "#FFFFFF",
-    fontSize: 16,
+    fontSize: 17,
     fontFamily: "Poppins_700Bold",
     letterSpacing: 0.3,
   },
@@ -434,12 +434,12 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   footerText: {
-    fontSize: 13,
+    fontSize: 14,
     fontFamily: "Poppins_400Regular",
     color: "#9CA3AF",
   },
   footerLink: {
-    fontSize: 13,
+    fontSize: 14,
     fontFamily: "Poppins_700Bold",
     color: "#D4AF37",
   },

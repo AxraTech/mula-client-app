@@ -4,6 +4,7 @@ import React, {
   useState,
   useEffect,
   useCallback,
+  useMemo,
   ReactNode,
 } from "react";
 import { Artwork } from "@/constants/data";
@@ -139,19 +140,19 @@ export function CartProvider({ children }: { children: ReactNode }) {
     0
   );
 
+  const value = useMemo(() => ({
+    items,
+    addToCart,
+    removeFromCart,
+    clearCart,
+    itemCount,
+    total,
+    syncing,
+    syncCart,
+  }), [items, addToCart, removeFromCart, clearCart, itemCount, total, syncing, syncCart]);
+
   return (
-    <CartContext.Provider
-      value={{
-        items,
-        addToCart,
-        removeFromCart,
-        clearCart,
-        itemCount,
-        total,
-        syncing,
-        syncCart,
-      }}
-    >
+    <CartContext.Provider value={value}>
       {children}
     </CartContext.Provider>
   );

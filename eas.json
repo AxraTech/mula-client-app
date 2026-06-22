@@ -18,7 +18,8 @@
       },
       "env": {
         "EXPO_PUBLIC_MULA_URL": "https://api.mula.com.mm"
-      }
+      },
+      "channel": "preview"
     },
     "production": {
       "android": {
@@ -27,7 +28,8 @@
       },
       "env": {
         "EXPO_PUBLIC_MULA_URL": "https://api.mula.com.mm"
-      }
+      },
+      "channel": "production"
     }
   }
 }

@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    fontSize: 22,
+    fontSize: 23,
     fontFamily: "Poppins_700Bold",
     color: "#1A1A2E",
     textAlign: "center",
@@ -116,11 +116,11 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   subtitle: {
-    fontSize: 14,
+    fontSize: 15,
     fontFamily: "Poppins_400Regular",
     color: "#9CA3AF",
     textAlign: "center",
-    lineHeight: 22,
+    lineHeight: 23,
     maxWidth: 280,
     marginTop: -4,
   },
@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   signInText: {
-    fontSize: 16,
+    fontSize: 17,
     fontFamily: "Poppins_700Bold",
     color: "#FFFFFF",
     letterSpacing: 0.3,
@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
   // Footer link
   signUpLink: { paddingVertical: 8 },
   signUpText: {
-    fontSize: 14,
+    fontSize: 15,
     fontFamily: "Poppins_400Regular",
     color: "#9CA3AF",
   },

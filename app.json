@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "Mula Art Gallery",
+    "name": "MULA",
     "slug": "mula-gallery",
-    "version": "1.0.0",
+    "version": "2",
     "orientation": "portrait",
     "icon": "./assets/images/appicon.png",
     "scheme": "mula-gallery",
@@ -14,11 +14,23 @@
       "backgroundColor": "#FFFFFF"
     },
     "ios": {
-      "supportsTablet": false
+      "supportsTablet": false,
+      "bundleIdentifier": "com.axratech.mula",
+      "buildNumber": "2",
+      "infoPlist": {
+        "CFBundleDisplayName": "MULA",
+        "CFBundleShortVersionString": "5"
+      }
     },
     "android": {
-      "package": "com.mula.artgallery",
-      "backgroundColor": "#F5F0E8"
+      "package": "com.axra.mula",
+      "versionCode": 2,
+      "backgroundColor": "#F5F0E8",
+      "blockedPermissions": [
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_BACKGROUND_LOCATION"
+      ]
     },
     "web": {
       "favicon": "./assets/images/appicon.png"
@@ -36,6 +48,12 @@
       "eas": {
         "projectId": "cde9bdac-7ef1-4d9f-9ef6-5f8c40eaaeea"
       }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/cde9bdac-7ef1-4d9f-9ef6-5f8c40eaaeea"
     }
   }
 }

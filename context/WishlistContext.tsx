@@ -1,5 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
-import { Artwork } from "@/constants/data";
+import React, { createContext, useContext, useState, useCallback, useMemo, ReactNode } from "react";
 
 interface WishlistContextType {
   liked: Set<string>;
@@ -12,7 +11,7 @@ const WishlistContext = createContext<WishlistContextType | null>(null);
 export function WishlistProvider({ children }: { children: ReactNode }) {
   const [liked, setLiked] = useState<Set<string>>(new Set());
 
-  const toggleLike = (artworkId: string) => {
+  const toggleLike = useCallback((artworkId: string) => {
     setLiked((prev) => {
       const next = new Set(prev);
       if (next.has(artworkId)) {
@@ -22,12 +21,14 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
       }
       return next;
     });
-  };
+  }, []);
 
-  const isLiked = (artworkId: string) => liked.has(artworkId);
+  const isLiked = useCallback((artworkId: string) => liked.has(artworkId), [liked]);
+
+  const value = useMemo(() => ({ liked, toggleLike, isLiked }), [liked, toggleLike, isLiked]);
 
   return (
-    <WishlistContext.Provider value={{ liked, toggleLike, isLiked }}>
+    <WishlistContext.Provider value={value}>
       {children}
     </WishlistContext.Provider>
   );

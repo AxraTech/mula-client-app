@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import {
   View,
   Text,
@@ -9,6 +9,7 @@ import {
   RefreshControl,
   useWindowDimensions,
   Platform,
+  TextInput,
 } from "react-native";
 import { router } from "expo-router";
 import { Feather } from "@expo/vector-icons";
@@ -21,6 +22,9 @@ import { Sidebar } from "@/components/Sidebar";
 import { Menu } from "lucide-react-native";
 
 const ITEMS_PER_PAGE = 20;
+const SEARCH_DEBOUNCE_MS = 400;
+
+type ArtistSort = "asc" | "desc";
 
 interface Artist {
   id: string;
@@ -35,6 +39,31 @@ interface Artist {
   followers?: number;
 }
 
+function getArtistQueryParams(search: string, sort: ArtistSort) {
+  const params: Record<string, string> = { sort };
+  const query = search.trim();
+  if (query) params.search = query;
+  return params;
+}
+
+function groupArtistsByLetter(artists: Artist[]) {
+  const groups: { letter: string; artists: Artist[] }[] = [];
+
+  for (const artist of artists) {
+    const first = artist.name.trim().charAt(0).toUpperCase();
+    const letter = /[A-Z]/.test(first) ? first : "#";
+    const last = groups[groups.length - 1];
+
+    if (!last || last.letter !== letter) {
+      groups.push({ letter, artists: [artist] });
+    } else {
+      last.artists.push(artist);
+    }
+  }
+
+  return groups;
+}
+
 export default function ArtistsScreen() {
   const { top: topPad } = useSafeAreaInsets();
   const { width } = useWindowDimensions();
@@ -45,38 +74,62 @@ export default function ArtistsScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const [hasMore, setHasMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
+  const [searching, setSearching] = useState(false);
+  const [sortOrder, setSortOrder] = useState<ArtistSort>("asc");
 
   const scrollViewRef = useRef<ScrollView>(null);
   const pageRef = useRef(1);
   const hasMoreRef = useRef(false);
   const loadingMoreRef = useRef(false);
+  const searchRef = useRef("");
+  const sortRef = useRef<ArtistSort>("asc");
+  const searchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const numColumns = width > 600 ? 3 : 2;
   const cardWidth = (width - 40 - (numColumns - 1) * 14) / numColumns;
+  const artistGroups = useMemo(
+    () =>
+      search.trim()
+        ? [{ letter: "", artists }]
+        : groupArtistsByLetter(artists),
+    [artists, search]
+  );
 
-  const load = useCallback(async (isRefresh = false) => {
-    if (isRefresh) {
-      pageRef.current = 1;
-      hasMoreRef.current = false;
-      setRefreshing(true);
-    } else {
-      setLoading(true);
-    }
-    try {
-      setError(null);
-      const result = await fetchPage("/artists", 1, ITEMS_PER_PAGE);
-      const mapped = result.items.map(mapArtist);
-      setArtists(mapped);
-      pageRef.current = 1;
-      hasMoreRef.current = result.hasMore;
-      setHasMore(result.hasMore);
-    } catch {
-      setError("Failed to load artists");
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
-    }
-  }, []);
+  const reloadArtists = useCallback(
+    async (isRefresh = false, options?: { silent?: boolean }) => {
+      if (isRefresh) {
+        pageRef.current = 1;
+        hasMoreRef.current = false;
+        setRefreshing(true);
+      } else if (!options?.silent) {
+        setLoading(true);
+      }
+      try {
+        setError(null);
+        const result = await fetchPage(
+          "/artists",
+          1,
+          ITEMS_PER_PAGE,
+          getArtistQueryParams(searchRef.current, sortRef.current)
+        );
+        const mapped = result.items.map(mapArtist);
+        setArtists(mapped);
+        pageRef.current = 1;
+        hasMoreRef.current = result.hasMore;
+        setHasMore(result.hasMore);
+      } catch {
+        setError("Failed to load artists");
+      } finally {
+        setLoading(false);
+        setSearching(false);
+        setRefreshing(false);
+      }
+    },
+    []
+  );
+
+  const load = reloadArtists;
 
   const loadMore = useCallback(async () => {
     if (loadingMoreRef.current || !hasMoreRef.current) return;
@@ -84,7 +137,12 @@ export default function ArtistsScreen() {
     setLoadingMore(true);
     try {
       const nextPage = pageRef.current + 1;
-      const result = await fetchPage("/artists", nextPage, ITEMS_PER_PAGE);
+      const result = await fetchPage(
+        "/artists",
+        nextPage,
+        ITEMS_PER_PAGE,
+        getArtistQueryParams(searchRef.current, sortRef.current)
+      );
       const mapped = result.items.map(mapArtist);
       setArtists((prev) => [...prev, ...mapped]);
       pageRef.current = nextPage;
@@ -98,9 +156,48 @@ export default function ArtistsScreen() {
     }
   }, []);
 
+  const handleSearchChange = (text: string) => {
+    setSearch(text);
+    if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
+
+    searchTimerRef.current = setTimeout(() => {
+      searchRef.current = text;
+      pageRef.current = 1;
+      hasMoreRef.current = false;
+      setSearching(true);
+      scrollViewRef.current?.scrollTo({ y: 0, animated: false });
+      load(false, { silent: true });
+    }, SEARCH_DEBOUNCE_MS);
+  };
+
+  const clearSearch = () => {
+    if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
+    setSearch("");
+    searchRef.current = "";
+    pageRef.current = 1;
+    hasMoreRef.current = false;
+    setSearching(true);
+    scrollViewRef.current?.scrollTo({ y: 0, animated: false });
+    reloadArtists(false, { silent: true });
+  };
+
+  const handleSortChange = (nextSort: ArtistSort) => {
+    if (nextSort === sortOrder) return;
+    setSortOrder(nextSort);
+    sortRef.current = nextSort;
+    pageRef.current = 1;
+    hasMoreRef.current = false;
+    setSearching(true);
+    scrollViewRef.current?.scrollTo({ y: 0, animated: false });
+    reloadArtists(false, { silent: true });
+  };
+
   useEffect(() => {
-    load(false);
-  }, [load]);
+    reloadArtists(false);
+    return () => {
+      if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
+    };
+  }, [reloadArtists]);
 
   return (
     <View style={styles.container}>
@@ -120,10 +217,62 @@ export default function ArtistsScreen() {
         </View>
         <View style={styles.divider} />
         <Text style={styles.tagline}>Discover talented artists and their creative journey</Text>
+
+        <View style={styles.searchWrapper}>
+          <Feather name="search" size={16} color="#9CA3AF" />
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Search artists by name…"
+            placeholderTextColor="#C0C0C0"
+            value={search}
+            onChangeText={handleSearchChange}
+            autoCapitalize="words"
+            autoCorrect={false}
+            returnKeyType="search"
+          />
+          {search !== "" && (
+            <Pressable onPress={clearSearch} hitSlop={8}>
+              <Feather name="x" size={16} color="#9CA3AF" />
+            </Pressable>
+          )}
+          {searching && <ActivityIndicator size="small" color={GOLD} style={styles.searchSpinner} />}
+        </View>
+
+        <View style={styles.sortRow}>
+          <Text style={styles.sortLabel}>Sort by</Text>
+          <View style={styles.sortToggle}>
+            <Pressable
+              style={[styles.sortBtn, sortOrder === "asc" && styles.sortBtnActive]}
+              onPress={() => handleSortChange("asc")}
+            >
+              <Feather
+                name="arrow-up"
+                size={14}
+                color={sortOrder === "asc" ? "#FFFFFF" : "#9CA3AF"}
+              />
+              <Text style={[styles.sortBtnText, sortOrder === "asc" && styles.sortBtnTextActive]}>
+                A–Z
+              </Text>
+            </Pressable>
+            <Pressable
+              style={[styles.sortBtn, sortOrder === "desc" && styles.sortBtnActive]}
+              onPress={() => handleSortChange("desc")}
+            >
+              <Feather
+                name="arrow-down"
+                size={14}
+                color={sortOrder === "desc" ? "#FFFFFF" : "#9CA3AF"}
+              />
+              <Text style={[styles.sortBtnText, sortOrder === "desc" && styles.sortBtnTextActive]}>
+                Z–A
+              </Text>
+            </Pressable>
+          </View>
+        </View>
       </View>
 
       {/* Content */}
-      {loading ? (
+      {loading && artists.length === 0 ? (
         <View style={styles.center}>
           <ActivityIndicator size="large" color={GOLD} />
         </View>
@@ -139,7 +288,8 @@ export default function ArtistsScreen() {
         <ScrollView
           ref={scrollViewRef}
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.grid}
+          contentContainerStyle={styles.listContent}
+          keyboardShouldPersistTaps="handled"
           refreshControl={
             <RefreshControl
               refreshing={refreshing}
@@ -156,13 +306,37 @@ export default function ArtistsScreen() {
           }}
           scrollEventThrottle={400}
         >
-          {artists.map((artist) => (
-            <ArtistCard
-              key={artist.id}
-              artist={artist}
-              width={cardWidth}
-            />
-          ))}
+          {artists.length === 0 ? (
+            <View style={styles.emptyState}>
+              <Feather name="search" size={40} color="#E5E7EB" />
+              <Text style={styles.emptyTitle}>No artists found</Text>
+              <Text style={styles.emptyText}>
+                {search.trim()
+                  ? `No results for "${search.trim()}". Try another name.`
+                  : "No artists available right now."}
+              </Text>
+            </View>
+          ) : (
+            artistGroups.map((group) => (
+              <View key={group.letter || "results"} style={styles.section}>
+                {!!group.letter && (
+                  <View style={styles.sectionHeader}>
+                    <Text style={styles.sectionLetter}>{group.letter}</Text>
+                    <View style={styles.sectionLine} />
+                  </View>
+                )}
+                <View style={styles.grid}>
+                  {group.artists.map((artist) => (
+                    <ArtistCard
+                      key={artist.id}
+                      artist={artist}
+                      width={cardWidth}
+                    />
+                  ))}
+                </View>
+              </View>
+            ))
+          )}
 
           {loadingMore && (
             <View style={styles.loadMoreContainer}>
@@ -273,15 +447,114 @@ const styles = StyleSheet.create({
   },
   menuBtn: { width: 40, height: 40, alignItems: "center", justifyContent: "center", borderRadius: 12 },
   brandWrap: { alignItems: "center" },
-  brandMark: { fontSize: 20, fontFamily: "Poppins_700Bold", color: "#1A1A2E", letterSpacing: 4 },
-  brandSub: { fontSize: 10, fontFamily: "Poppins_500Medium", color: "#9CA3AF", letterSpacing: 2, marginTop: 1 },
+  brandMark: { fontSize: 21, fontFamily: "Poppins_700Bold", color: "#1A1A2E", letterSpacing: 4 },
+  brandSub: { fontSize: 11, fontFamily: "Poppins_500Medium", color: "#9CA3AF", letterSpacing: 2, marginTop: 1 },
   divider: { height: 1, backgroundColor: "#D4AF3730", marginBottom: 10 },
-  tagline: { fontSize: 12, fontFamily: "Poppins_400Regular", color: "#9CA3AF", textAlign: "center" },
+  tagline: { fontSize: 13, fontFamily: "Poppins_400Regular", color: "#9CA3AF", textAlign: "center" },
+  searchWrapper: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    marginTop: 14,
+    paddingHorizontal: 14,
+    height: 46,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "#EBEBEB",
+    backgroundColor: "#FAFAFA",
+  },
+  searchInput: {
+    flex: 1,
+    fontSize: 15,
+    fontFamily: "Poppins_400Regular",
+    color: "#1A1A2E",
+    paddingVertical: 0,
+  },
+  searchSpinner: { marginLeft: 2 },
+  sortRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginTop: 12,
+  },
+  sortLabel: {
+    fontSize: 13,
+    fontFamily: "Poppins_500Medium",
+    color: "#9CA3AF",
+  },
+  sortToggle: {
+    flexDirection: "row",
+    gap: 8,
+  },
+  sortBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: "#EBEBEB",
+    backgroundColor: "#FAFAFA",
+  },
+  sortBtnActive: {
+    backgroundColor: GOLD,
+    borderColor: GOLD,
+  },
+  sortBtnText: {
+    fontSize: 14,
+    fontFamily: "Poppins_600SemiBold",
+    color: "#9CA3AF",
+  },
+  sortBtnTextActive: {
+    color: "#FFFFFF",
+  },
 
   center: { flex: 1, justifyContent: "center", alignItems: "center", padding: 20 },
-  errorText: { fontSize: 15, fontFamily: "Poppins_500Medium", color: "#1A1A2E", marginTop: 14, marginBottom: 20 },
+  listContent: { paddingBottom: 24 },
+  section: { width: "100%" },
+  sectionHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    paddingHorizontal: 16,
+    paddingTop: 8,
+    paddingBottom: 4,
+  },
+  sectionLetter: {
+    fontSize: 19,
+    fontFamily: "Poppins_700Bold",
+    color: GOLD,
+    minWidth: 18,
+  },
+  sectionLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: "#D4AF3730",
+  },
+  emptyState: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 32,
+    paddingVertical: 48,
+  },
+  emptyTitle: {
+    fontSize: 17,
+    fontFamily: "Poppins_600SemiBold",
+    color: "#1A1A2E",
+    marginTop: 14,
+  },
+  emptyText: {
+    fontSize: 14,
+    fontFamily: "Poppins_400Regular",
+    color: "#9CA3AF",
+    textAlign: "center",
+    marginTop: 6,
+    lineHeight: 21,
+  },
+  errorText: { fontSize: 16, fontFamily: "Poppins_500Medium", color: "#1A1A2E", marginTop: 14, marginBottom: 20 },
   retryBtn: { paddingHorizontal: 24, paddingVertical: 12, borderRadius: 12, backgroundColor: GOLD },
-  retryText: { color: "#FFF", fontSize: 14, fontFamily: "Poppins_700Bold" },
+  retryText: { color: "#FFF", fontSize: 15, fontFamily: "Poppins_700Bold" },
 
   grid: { padding: 16, flexDirection: "row", flexWrap: "wrap", gap: 16 },
 
@@ -327,21 +600,21 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   portraitInitials: {
-    fontSize: 28,
+    fontSize: 29,
     fontFamily: "Poppins_700Bold",
     color: "#FFFFFF",
   },
 
   infoContainer: { alignItems: "center", width: "100%" },
   artistName: {
-    fontSize: 14,
+    fontSize: 15,
     fontFamily: "Poppins_700Bold",
     color: "#1A1A2E",
     textAlign: "center",
     marginBottom: 3,
   },
   specialty: {
-    fontSize: 11,
+    fontSize: 12,
     fontFamily: "Poppins_400Regular",
     color: "#9CA3AF",
     textAlign: "center",
@@ -356,7 +629,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   viewLabel: {
-    fontSize: 10,
+    fontSize: 11,
     fontFamily: "Poppins_500Medium",
     color: GOLD,
     letterSpacing: 1,
@@ -365,10 +638,10 @@ const styles = StyleSheet.create({
   cardDivider: { width: "55%", height: 1, backgroundColor: "#D4AF3730", marginBottom: 10 },
   footer: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", width: "100%" },
   stat: { flexDirection: "row", alignItems: "center", gap: 4 },
-  statText: { fontSize: 11, fontFamily: "Poppins_400Regular", color: "#9CA3AF" },
+  statText: { fontSize: 12, fontFamily: "Poppins_400Regular", color: "#9CA3AF" },
 
   loadMoreContainer: { flexDirection: "row", alignItems: "center", justifyContent: "center", paddingVertical: 20, gap: 8, width: "100%" },
-  loadMoreText: { fontSize: 12, fontFamily: "Poppins_400Regular", color: "#9CA3AF" },
+  loadMoreText: { fontSize: 13, fontFamily: "Poppins_400Regular", color: "#9CA3AF" },
   endOfListContainer: { alignItems: "center", paddingVertical: 18, width: "100%" },
-  endOfListText: { fontSize: 12, fontFamily: "Poppins_400Regular", color: "#C0C0C0", letterSpacing: 0.5 },
+  endOfListText: { fontSize: 13, fontFamily: "Poppins_400Regular", color: "#C0C0C0", letterSpacing: 0.5 },
 });

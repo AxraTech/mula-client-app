@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
   },
   backBtn: { width: 40, height: 40, alignItems: "center", justifyContent: "center" },
-  headerTitle: { fontSize: 18, fontFamily: "Poppins_600SemiBold", color: "#1A1A2E" },
+  headerTitle: { fontSize: 19, fontFamily: "Poppins_600SemiBold", color: "#1A1A2E" },
 
   content: { paddingHorizontal: 20, paddingTop: 16 },
 
@@ -194,23 +194,23 @@ const styles = StyleSheet.create({
     borderColor: "#F3F4F6",
   },
   cardHeader: { flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start" },
-  orderId: { fontSize: 13, fontFamily: "Poppins_600SemiBold", color: "#1A1A2E" },
-  orderDate: { fontSize: 11, fontFamily: "Poppins_400Regular", color: "#9CA3AF", marginTop: 2 },
+  orderId: { fontSize: 14, fontFamily: "Poppins_600SemiBold", color: "#1A1A2E" },
+  orderDate: { fontSize: 12, fontFamily: "Poppins_400Regular", color: "#9CA3AF", marginTop: 2 },
   statusBadge: { paddingHorizontal: 10, paddingVertical: 4, borderRadius: 20 },
-  statusText: { fontSize: 11, fontFamily: "Poppins_600SemiBold" },
+  statusText: { fontSize: 12, fontFamily: "Poppins_600SemiBold" },
 
   divider: { height: 1, backgroundColor: "#F3F4F6", marginVertical: 12 },
 
-  productName: { fontSize: 14, fontFamily: "Poppins_500Medium", color: "#374151", marginBottom: 12 },
+  productName: { fontSize: 15, fontFamily: "Poppins_500Medium", color: "#374151", marginBottom: 12 },
 
   cardFooter: { flexDirection: "row", justifyContent: "space-between", alignItems: "flex-end" },
-  payMethod: { fontSize: 12, fontFamily: "Poppins_400Regular", color: "#6B7280" },
-  receiver: { fontSize: 11, fontFamily: "Poppins_400Regular", color: "#9CA3AF", marginTop: 2 },
-  total: { fontSize: 16, fontFamily: "Poppins_700Bold", color: GOLD },
+  payMethod: { fontSize: 13, fontFamily: "Poppins_400Regular", color: "#6B7280" },
+  receiver: { fontSize: 12, fontFamily: "Poppins_400Regular", color: "#9CA3AF", marginTop: 2 },
+  total: { fontSize: 17, fontFamily: "Poppins_700Bold", color: GOLD },
 
   empty: { alignItems: "center", paddingTop: 80, gap: 10 },
-  emptyTitle: { fontSize: 18, fontFamily: "Poppins_600SemiBold", color: "#1A1A2E", marginTop: 8 },
-  emptyText: { fontSize: 13, fontFamily: "Poppins_400Regular", color: "#9CA3AF" },
+  emptyTitle: { fontSize: 19, fontFamily: "Poppins_600SemiBold", color: "#1A1A2E", marginTop: 8 },
+  emptyText: { fontSize: 14, fontFamily: "Poppins_400Regular", color: "#9CA3AF" },
   shopBtn: { marginTop: 16, backgroundColor: GOLD, paddingHorizontal: 32, paddingVertical: 12, borderRadius: 24 },
-  shopBtnText: { fontSize: 14, fontFamily: "Poppins_600SemiBold", color: "#FFFFFF" },
+  shopBtnText: { fontSize: 15, fontFamily: "Poppins_600SemiBold", color: "#FFFFFF" },
 });

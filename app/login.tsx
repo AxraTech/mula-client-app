@@ -12,7 +12,7 @@ import {
   KeyboardAvoidingView,
   Image,
 } from "react-native";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import { Feather } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -21,7 +21,8 @@ import { api } from "@/services/api";
 
 
 export default function LoginScreen() {
-  const { signin } = useAuth();
+  const { direct } = useLocalSearchParams<{ direct?: string }>();
+  const { signin, isAuthenticated, isLoading } = useAuth();
   const insets = useSafeAreaInsets();
 
   const [phone, setPhone] = useState("");
@@ -40,6 +41,12 @@ export default function LoginScreen() {
       Animated.spring(slideAnim, { toValue: 0, friction: 8, tension: 60, useNativeDriver: true }),
     ]).start();
   }, []);
+
+  useEffect(() => {
+    if (!isLoading && isAuthenticated) {
+      router.replace("/(tabs)");
+    }
+  }, [isAuthenticated, isLoading]);
 
   const shake = () => {
     Animated.sequence([
@@ -63,7 +70,7 @@ export default function LoginScreen() {
     setLoading(false);
 
     if (result.success) {
-      router.replace("/");
+      router.replace("/(tabs)");
     } else {
       setError(result.error ?? "Invalid phone or password");
       shake();
@@ -87,6 +94,12 @@ export default function LoginScreen() {
     }
   };
 
+  const showBack = direct !== "1" && router.canGoBack();
+
+  const handleBack = () => {
+    if (router.canGoBack()) router.back();
+  };
+
   const topPad = Platform.OS === "web" ? 67 : insets.top;
 
   return (
@@ -97,17 +110,23 @@ export default function LoginScreen() {
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-          {/* Top bar */}
-          <View style={styles.topBar}>
-            <Pressable style={styles.backBtn} onPress={() => router.back()}>
-              <Feather name="chevron-left" size={22} color="#1A1A2E" />
-            </Pressable>
+          {/* Header */}
+          <View style={[styles.headerBar, { paddingTop: 8 }]}>
+            {showBack ? (
+              <Pressable onPress={handleBack} style={styles.backBtn} hitSlop={8}>
+                <Feather name="arrow-left" size={22} color="#1A1A2E" />
+              </Pressable>
+            ) : (
+              <View style={styles.headerSpacer} />
+            )}
+            <Text style={styles.headerTitle}>Sign In</Text>
+            <View style={styles.headerSpacer} />
           </View>
 
           <Animated.View
             style={[styles.inner, { opacity: fadeAnim, transform: [{ translateY: slideAnim }, { translateX: shakeAnim }] }]}
           >
-            {/* Header */}
+            {/* Brand */}
             <View style={styles.header}>
               <View style={styles.logoRing}>
                 <Image source={require("../assets/images/logos.png")} style={styles.logoImage} resizeMode="contain" />
@@ -202,18 +221,26 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#FFFFFF",
   },
-  topBar: {
+  headerBar: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingHorizontal: 20,
-    paddingTop: 8,
-    paddingBottom: 4,
+    paddingBottom: 8,
   },
   backBtn: {
     width: 40,
     height: 40,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#F5F5F5",
-    borderRadius: 20,
+  },
+  headerTitle: {
+    fontSize: 19,
+    fontFamily: "Poppins_600SemiBold",
+    color: "#1A1A2E",
+  },
+  headerSpacer: {
+    width: 40,
   },
   scrollContent: {
     flexGrow: 1,
@@ -246,14 +273,14 @@ const styles = StyleSheet.create({
   },
   logoImage: { width: 60, height: 60 },
   title: {
-    fontSize: 26,
+    fontSize: 27,
     fontFamily: "Poppins_700Bold",
     color: "#1A1A2E",
     letterSpacing: -0.3,
     marginBottom: 4,
   },
   subtitle: {
-    fontSize: 13,
+    fontSize: 14,
     fontFamily: "Poppins_400Regular",
     color: "#9CA3AF",
   },
@@ -261,7 +288,7 @@ const styles = StyleSheet.create({
   // Inputs
   inputGroup: { marginBottom: 16 },
   inputLabel: {
-    fontSize: 12,
+    fontSize: 13,
     fontFamily: "Poppins_600SemiBold",
     color: "#374151",
     marginBottom: 6,
@@ -279,7 +306,7 @@ const styles = StyleSheet.create({
   inputIcon: { marginRight: 10 },
   input: {
     flex: 1,
-    fontSize: 14,
+    fontSize: 15,
     fontFamily: "Poppins_400Regular",
     color: "#1A1A2E",
   },
@@ -291,14 +318,14 @@ const styles = StyleSheet.create({
     marginTop: -4,
   },
   forgotText: {
-    fontSize: 13,
+    fontSize: 14,
     fontFamily: "Poppins_600SemiBold",
     color: "#D4AF37",
   },
 
   errorText: {
     color: "#EF4444",
-    fontSize: 12,
+    fontSize: 13,
     fontFamily: "Poppins_500Medium",
     textAlign: "center",
     marginBottom: 8,
@@ -323,7 +350,7 @@ const styles = StyleSheet.create({
   },
   loginBtnText: {
     color: "#FFFFFF",
-    fontSize: 16,
+    fontSize: 17,
     fontFamily: "Poppins_700Bold",
     letterSpacing: 0.3,
   },
@@ -341,12 +368,12 @@ const styles = StyleSheet.create({
     marginTop: 24,
   },
   footerText: {
-    fontSize: 13,
+    fontSize: 14,
     fontFamily: "Poppins_400Regular",
     color: "#9CA3AF",
   },
   footerLink: {
-    fontSize: 13,
+    fontSize: 14,
     fontFamily: "Poppins_700Bold",
     color: "#D4AF37",
   },

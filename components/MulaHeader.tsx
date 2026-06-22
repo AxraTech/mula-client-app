@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   logoText: {
-    fontSize: 20,
+    fontSize: 21,
     fontWeight: "700",
     color: Colors.text,
     letterSpacing: 8,
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
     color: "#fff",
   },
   screenTitle: {
-    fontSize: 18,
+    fontSize: 19,
     fontWeight: "600",
     color: Colors.text,
     letterSpacing: 1,
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
   },
   badgeText: {
     color: "#fff",
-    fontSize: 9,
+    fontSize: 10,
     fontWeight: "800",
   },
 });

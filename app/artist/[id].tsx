@@ -245,7 +245,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 12,
   },
-  loadingText: { fontSize: 14, fontFamily: "Poppins_400Regular", color: "#9CA3AF" },
+  loadingText: { fontSize: 15, fontFamily: "Poppins_400Regular", color: "#9CA3AF" },
 
   notFound: {
     flex: 1,
@@ -254,14 +254,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 14,
   },
-  notFoundTitle: { fontSize: 16, fontFamily: "Poppins_600SemiBold", color: "#1A1A2E" },
+  notFoundTitle: { fontSize: 17, fontFamily: "Poppins_600SemiBold", color: "#1A1A2E" },
   notFoundBtn: {
     paddingHorizontal: 28,
     paddingVertical: 11,
     borderRadius: 12,
     backgroundColor: "#D4AF37",
   },
-  notFoundBtnText: { color: "#fff", fontFamily: "Poppins_700Bold", fontSize: 14 },
+  notFoundBtnText: { color: "#fff", fontFamily: "Poppins_700Bold", fontSize: 15 },
 
   header: {
     flexDirection: "row",
@@ -276,7 +276,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     flex: 1,
     textAlign: "center",
-    fontSize: 16,
+    fontSize: 17,
     fontFamily: "Poppins_700Bold",
     color: "#1A1A2E",
     letterSpacing: 0.3,
@@ -307,22 +307,22 @@ const styles = StyleSheet.create({
   },
   avatarImg: { width: "100%", height: "100%" },
   avatarGrad: { width: "100%", height: "100%", alignItems: "center", justifyContent: "center" },
-  avatarInitials: { fontSize: 34, fontFamily: "Poppins_700Bold", color: "#FFFFFF" },
+  avatarInitials: { fontSize: 35, fontFamily: "Poppins_700Bold", color: "#FFFFFF" },
 
-  artistName: { fontSize: 22, fontFamily: "Poppins_700Bold", color: "#1A1A2E" },
-  specialization: { fontSize: 13, fontFamily: "Poppins_600SemiBold", color: "#D4AF37" },
+  artistName: { fontSize: 23, fontFamily: "Poppins_700Bold", color: "#1A1A2E" },
+  specialization: { fontSize: 14, fontFamily: "Poppins_600SemiBold", color: "#D4AF37" },
 
   statsRow: { flexDirection: "row", alignItems: "center", gap: 0, marginTop: 4 },
   statItem: { alignItems: "center", paddingHorizontal: 24 },
-  statValue: { fontSize: 20, fontFamily: "Poppins_700Bold", color: "#1A1A2E" },
-  statLabel: { fontSize: 11, fontFamily: "Poppins_400Regular", color: "#9CA3AF", marginTop: 2 },
+  statValue: { fontSize: 21, fontFamily: "Poppins_700Bold", color: "#1A1A2E" },
+  statLabel: { fontSize: 12, fontFamily: "Poppins_400Regular", color: "#9CA3AF", marginTop: 2 },
   statDivider: { width: 1, height: 36, backgroundColor: "#E5E7EB" },
 
   bio: {
-    fontSize: 14,
+    fontSize: 15,
     fontFamily: "Poppins_400Regular",
     color: "#6B7280",
-    lineHeight: 28,
+    lineHeight: 29,
     textAlign: "center",
     paddingHorizontal: 8,
   },
@@ -337,7 +337,7 @@ const styles = StyleSheet.create({
     }),
   },
   followGrad: { paddingHorizontal: 40, paddingVertical: 12 },
-  followBtnText: { fontSize: 14, fontFamily: "Poppins_700Bold", color: "#FFFFFF" },
+  followBtnText: { fontSize: 15, fontFamily: "Poppins_700Bold", color: "#FFFFFF" },
 
   artworksSection: { padding: 16 },
   artworksSectionHeader: {
@@ -346,8 +346,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginBottom: 16,
   },
-  sectionTitle: { fontSize: 18, fontFamily: "Poppins_700Bold", color: "#1A1A2E" },
+  sectionTitle: { fontSize: 19, fontFamily: "Poppins_700Bold", color: "#1A1A2E" },
   emptyState: { alignItems: "center", paddingVertical: 40, gap: 8 },
-  emptyText: { fontSize: 14, fontFamily: "Poppins_400Regular", color: "#9CA3AF" },
+  emptyText: { fontSize: 15, fontFamily: "Poppins_400Regular", color: "#9CA3AF" },
   grid: { flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between" },
 });

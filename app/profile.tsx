@@ -85,7 +85,7 @@ export default function ProfileScreen() {
 
   const handleLogout = async () => {
     await logout();
-    router.replace("/welcome");
+    router.replace("/");
   };
 
   if (!isAuthenticated) {
@@ -271,13 +271,13 @@ const styles = StyleSheet.create({
   headerTitle: {
     flex: 1,
     textAlign: "center",
-    fontSize: 16,
+    fontSize: 17,
     fontFamily: "Poppins_700Bold",
     color: "#1A1A2E",
     letterSpacing: 0.3,
   },
   editBtnText: {
-    fontSize: 14,
+    fontSize: 15,
     fontFamily: "Poppins_600SemiBold",
     color: GOLD,
   },
@@ -307,9 +307,9 @@ const styles = StyleSheet.create({
   },
   avatarImg: { width: "100%", height: "100%" },
   avatarGrad: { width: "100%", height: "100%", alignItems: "center", justifyContent: "center" },
-  avatarInitials: { fontSize: 34, fontFamily: "Poppins_700Bold", color: "#FFFFFF" },
-  displayName: { fontSize: 20, fontFamily: "Poppins_700Bold", color: "#1A1A2E", marginTop: 4 },
-  phoneText: { fontSize: 13, fontFamily: "Poppins_400Regular", color: "#9CA3AF" },
+  avatarInitials: { fontSize: 35, fontFamily: "Poppins_700Bold", color: "#FFFFFF" },
+  displayName: { fontSize: 21, fontFamily: "Poppins_700Bold", color: "#1A1A2E", marginTop: 4 },
+  phoneText: { fontSize: 14, fontFamily: "Poppins_400Regular", color: "#9CA3AF" },
 
   goldDivider: { height: 2, backgroundColor: "#D4AF3725", borderRadius: 1 },
 
@@ -328,7 +328,7 @@ const styles = StyleSheet.create({
     }),
   },
   sectionTitle: {
-    fontSize: 11,
+    fontSize: 12,
     fontFamily: "Poppins_700Bold",
     color: "#9CA3AF",
     letterSpacing: 1.2,
@@ -345,10 +345,10 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   fieldLabelRow: { flexDirection: "row", alignItems: "center", gap: 7 },
-  fieldLabel: { fontSize: 11, fontFamily: "Poppins_500Medium", color: "#9CA3AF" },
-  fieldValue: { fontSize: 15, fontFamily: "Poppins_500Medium", color: "#1A1A2E", paddingLeft: 21 },
+  fieldLabel: { fontSize: 12, fontFamily: "Poppins_500Medium", color: "#9CA3AF" },
+  fieldValue: { fontSize: 16, fontFamily: "Poppins_500Medium", color: "#1A1A2E", paddingLeft: 21 },
   fieldInput: {
-    fontSize: 15,
+    fontSize: 16,
     fontFamily: "Poppins_400Regular",
     color: "#1A1A2E",
     paddingHorizontal: 12,
@@ -360,9 +360,9 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
 
-  errorText: { color: "#FF3366", fontSize: 13, fontFamily: "Poppins_400Regular", textAlign: "center" },
+  errorText: { color: "#FF3366", fontSize: 14, fontFamily: "Poppins_400Regular", textAlign: "center" },
   cancelBtn: { alignItems: "center", paddingVertical: 8 },
-  cancelBtnText: { fontSize: 14, fontFamily: "Poppins_400Regular", color: "#9CA3AF" },
+  cancelBtnText: { fontSize: 15, fontFamily: "Poppins_400Regular", color: "#9CA3AF" },
 
   // Menu
   menuItem: {
@@ -383,7 +383,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  menuLabel: { flex: 1, fontSize: 15, fontFamily: "Poppins_400Regular", color: "#1A1A2E" },
+  menuLabel: { flex: 1, fontSize: 16, fontFamily: "Poppins_400Regular", color: "#1A1A2E" },
 
   // Logout
   logoutBtn: {
@@ -397,7 +397,7 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     marginBottom: 8,
   },
-  logoutText: { color: "#FF3366", fontSize: 15, fontFamily: "Poppins_700Bold" },
+  logoutText: { color: "#FF3366", fontSize: 16, fontFamily: "Poppins_700Bold" },
 
   // Guest
   guestState: { flex: 1, alignItems: "center", justifyContent: "center", paddingHorizontal: 32, gap: 16 },
@@ -411,9 +411,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  guestTitle: { fontSize: 20, fontFamily: "Poppins_700Bold", color: "#1A1A2E" },
-  guestSubtitle: { fontSize: 14, fontFamily: "Poppins_400Regular", color: "#9CA3AF", textAlign: "center", lineHeight: 22 },
+  guestTitle: { fontSize: 21, fontFamily: "Poppins_700Bold", color: "#1A1A2E" },
+  guestSubtitle: { fontSize: 15, fontFamily: "Poppins_400Regular", color: "#9CA3AF", textAlign: "center", lineHeight: 23 },
   signInBtn: { width: "100%", borderRadius: 14, overflow: "hidden", marginTop: 8 },
   signInGradient: { paddingVertical: 16, alignItems: "center" },
-  signInText: { fontSize: 16, fontFamily: "Poppins_700Bold", color: "#FFFFFF" },
+  signInText: { fontSize: 17, fontFamily: "Poppins_700Bold", color: "#FFFFFF" },
 });

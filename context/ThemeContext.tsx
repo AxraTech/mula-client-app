@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, { createContext, useContext, useState, useCallback, useMemo, ReactNode } from "react";
 
 export type ArtMode = "manual" | "digital";
 
@@ -63,13 +63,19 @@ export const digitalTheme = {
 const ThemeContext = createContext<ThemeContextType | null>(null);
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [mode, setMode] = useState<ArtMode>("manual");
+  const [mode, setModeState] = useState<ArtMode>("manual");
 
+  const setMode = useCallback((m: ArtMode) => setModeState(m), []);
   const isDigital = mode === "digital";
   const theme = isDigital ? digitalTheme : manualTheme;
 
+  const value = useMemo<ThemeContextType>(
+    () => ({ mode, setMode, isDigital, theme }),
+    [mode, setMode, isDigital, theme]
+  );
+
   return (
-    <ThemeContext.Provider value={{ mode, setMode, isDigital, theme }}>
+    <ThemeContext.Provider value={value}>
       {children}
     </ThemeContext.Provider>
   );

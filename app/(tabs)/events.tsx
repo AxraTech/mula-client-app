@@ -218,11 +218,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   brandMark: {
-    fontSize: 20,
+    fontSize: 21,
     letterSpacing: 3,
   },
   brandSub: {
-    fontSize: 10,
+    fontSize: 11,
     letterSpacing: 2,
     marginTop: 2,
   },
@@ -250,7 +250,7 @@ const styles = StyleSheet.create({
     borderColor: "#D4AF37",
   },
   tabText: {
-    fontSize: 13,
+    fontSize: 14,
     fontFamily: "Poppins_600SemiBold",
     color: "#9CA3AF",
   },
@@ -302,14 +302,14 @@ const styles = StyleSheet.create({
   },
   statusDot: { width: 6, height: 6, borderRadius: 3 },
   statusText: {
-    fontSize: 11,
+    fontSize: 12,
     fontFamily: "Poppins_600SemiBold",
   },
   heroTitle: {
-    fontSize: 18,
+    fontSize: 19,
     fontFamily: "Poppins_700Bold",
     color: "#FFFFFF",
-    lineHeight: 34,
+    lineHeight: 35,
   },
   metaRow: { gap: 4 },
   metaItem: {
@@ -318,16 +318,16 @@ const styles = StyleSheet.create({
     gap: 5,
   },
   heroMeta: {
-    fontSize: 12,
+    fontSize: 13,
     fontFamily: "Poppins_400Regular",
     color: "rgba(255,255,255,0.8)",
     flex: 1,
   },
   heroDesc: {
-    fontSize: 12,
+    fontSize: 13,
     fontFamily: "Poppins_400Regular",
     color: "rgba(255,255,255,0.65)",
-    lineHeight: 18,
+    lineHeight: 19,
   },
   learnBtn: {
     flexDirection: "row",
@@ -343,7 +343,7 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   learnBtnText: {
-    fontSize: 12,
+    fontSize: 13,
     fontFamily: "Poppins_600SemiBold",
     color: GOLD,
   },
@@ -365,12 +365,12 @@ const styles = StyleSheet.create({
     borderColor: "#D4AF3740",
   },
   emptyTitle: {
-    fontSize: 17,
+    fontSize: 18,
     fontFamily: "Poppins_700Bold",
     marginTop: 4,
   },
   emptyText: {
-    fontSize: 13,
+    fontSize: 14,
     fontFamily: "Poppins_400Regular",
   },
 });

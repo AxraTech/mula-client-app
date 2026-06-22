@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.gold,
   },
   chipText: {
-    fontSize: 13,
+    fontSize: 14,
     fontWeight: "600",
     color: Colors.gold,
   },

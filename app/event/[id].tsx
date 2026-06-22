@@ -206,9 +206,9 @@ export default function EventDetailScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1 },
   center: { flex: 1, alignItems: "center", justifyContent: "center", gap: 12 },
-  notFoundText: { fontSize: 16, fontFamily: "Poppins_600SemiBold" },
+  notFoundText: { fontSize: 17, fontFamily: "Poppins_600SemiBold" },
   backBtnCenter: { paddingHorizontal: 24, paddingVertical: 10, borderRadius: 12, backgroundColor: GOLD },
-  backBtnCenterText: { color: "#fff", fontFamily: "Poppins_600SemiBold", fontSize: 14 },
+  backBtnCenterText: { color: "#fff", fontFamily: "Poppins_600SemiBold", fontSize: 15 },
 
   // Hero
   hero: { width: SW, height: HERO_H, position: "relative" },
@@ -245,9 +245,9 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
   },
   statusDot: { width: 7, height: 7, borderRadius: 4 },
-  statusLabel: { fontSize: 12 },
-  heroTitle: { fontSize: 26, color: "#fff", lineHeight: 34, letterSpacing: 0.2 },
-  heroSubTitle: { fontSize: 15, color: "rgba(255,255,255,0.75)", marginTop: -4 },
+  statusLabel: { fontSize: 13 },
+  heroTitle: { fontSize: 27, color: "#fff", lineHeight: 35, letterSpacing: 0.2 },
+  heroSubTitle: { fontSize: 16, color: "rgba(255,255,255,0.75)", marginTop: -4 },
   heroAccentLine: { width: 44, height: 3, backgroundColor: GOLD, borderRadius: 2, marginTop: 4 },
 
   // Info cards row
@@ -269,9 +269,9 @@ const styles = StyleSheet.create({
     }),
   },
   infoCardIcon: { width: 36, height: 36, borderRadius: 10, alignItems: "center", justifyContent: "center" },
-  infoCardLabel: { fontSize: 11, marginTop: 2 },
-  infoCardValue: { fontSize: 13, lineHeight: 18 },
-  infoCardSub: { fontSize: 12 },
+  infoCardLabel: { fontSize: 12, marginTop: 2 },
+  infoCardValue: { fontSize: 14, lineHeight: 19 },
+  infoCardSub: { fontSize: 13 },
 
   // Location
   locationCard: {
@@ -289,13 +289,13 @@ const styles = StyleSheet.create({
     }),
   },
   locationIcon: { width: 40, height: 40, borderRadius: 12, alignItems: "center", justifyContent: "center" },
-  locationValue: { fontSize: 14, marginTop: 2, lineHeight: 20 },
+  locationValue: { fontSize: 15, marginTop: 2, lineHeight: 21 },
 
   // About
   aboutSection: { marginHorizontal: 20, marginTop: 28, gap: 14 },
   aboutHeader: { flexDirection: "row", alignItems: "center", gap: 10 },
   aboutAccent: { width: 4, height: 20, backgroundColor: GOLD, borderRadius: 2 },
-  aboutTitle: { fontSize: 16 },
-  aboutBody: { fontSize: 14, lineHeight: 26 },
+  aboutTitle: { fontSize: 17 },
+  aboutBody: { fontSize: 15, lineHeight: 27 },
   aboutDivider: { height: 1 },
 });

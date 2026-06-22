@@ -29,6 +29,7 @@ import {
   extractSingle,
 } from "@/services/mappers";
 import { LoadingScreen } from "@/components/LoadingScreen";
+import { ArtistNameLink } from "@/components/ArtistNameLink";
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -392,11 +393,6 @@ export default function ArtworkDetailScreen() {
               </View>
             </View>
           </Animated.View>
-
-          {/* Clean Type Badge */}
-          <View style={[styles.pillBadge, { backgroundColor: isDigital ? "#BF00FF" : "#C4952A" }]}>
-            <Text style={styles.pillText}>{artwork.type === "manual" ? "Traditional Art" : "Digital Art"}</Text>
-          </View>
         </View>
 
         {/* Elegant Info Card */}
@@ -404,9 +400,12 @@ export default function ArtworkDetailScreen() {
           {/* Title & Artist */}
           <View style={styles.titleSection}>
             <Text style={[styles.title, { color: theme.text, fontFamily: theme.fonts.bold }]}>{artwork.title}</Text>
-            <Text style={[styles.artist, { color: theme.textLight, fontFamily: theme.fonts.regular }]}>
-              {artwork.artist}
-            </Text>
+            <ArtistNameLink
+              name={artwork.artist}
+              artistId={artwork.artistId}
+              style={[styles.artist, { color: theme.textLight, fontFamily: theme.fonts.regular }]}
+              linkStyle={{ color: accent, textDecorationLine: "underline" }}
+            />
           </View>
 
           {/* Elegant Details */}
@@ -490,14 +489,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 16,
   },
-  loadingText: { fontSize: 16 },
+  loadingText: { fontSize: 17 },
   backBtn: {
     paddingHorizontal: 24,
     paddingVertical: 12,
     borderRadius: 12,
     marginTop: 20,
   },
-  backBtnText: { color: "#fff", fontWeight: "600", fontSize: 16 },
+  backBtnText: { color: "#fff", fontWeight: "600", fontSize: 17 },
 
   // Velvet Curtains
   curtainPanel: {
@@ -700,18 +699,6 @@ const styles = StyleSheet.create({
     aspectRatio: 2 / 3,
     backgroundColor: "#1A1A1A",
   },
-  pillBadge: {
-    marginTop: 20,
-    paddingHorizontal: 16,
-    paddingVertical: 6,
-    borderRadius: 20,
-  },
-  pillText: {
-    color: "#fff",
-    fontSize: 12,
-    fontWeight: "600",
-    letterSpacing: 0.3,
-  },
 
   // Elegant Info Card
   infoCard: {
@@ -730,13 +717,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   title: {
-    fontSize: 18,
-    lineHeight: 35,
+    fontSize: 19,
+    lineHeight: 36,
     marginBottom: 6,
     textAlign: "center",
   },
   artist: {
-    fontSize: 14,
+    fontSize: 15,
     textAlign: "center",
   },
 
@@ -752,13 +739,13 @@ const styles = StyleSheet.create({
     minWidth: 70,
   },
   detailLabel: {
-    fontSize: 11,
+    fontSize: 12,
     textTransform: "uppercase",
     letterSpacing: 1,
     marginBottom: 4,
   },
   detailValue: {
-    fontSize: 14,
+    fontSize: 15,
     textAlign: "center",
   },
 
@@ -775,10 +762,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
   },
   priceLabel: {
-    fontSize: 13,
+    fontSize: 14,
   },
   priceValue: {
-    fontSize: 24,
+    fontSize: 25,
   },
 
   // Modern Floating Bottom Bar
@@ -810,7 +797,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   cartChipText: {
-    fontSize: 13,
+    fontSize: 14,
     fontWeight: "600",
   },
   actionBtn: {
@@ -828,7 +815,7 @@ const styles = StyleSheet.create({
   },
   actionBtnText: {
     color: "#fff",
-    fontSize: 15,
+    fontSize: 16,
     fontWeight: "700",
     letterSpacing: 0.5,
   },

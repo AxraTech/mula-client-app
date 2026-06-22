@@ -80,7 +80,7 @@ export default function TabLayout() {
           <TabBarBackground isDigital={isDigital} bg={theme.tabBar} />
         ),
         tabBarLabelStyle: {
-          fontSize: 9,
+          fontSize: 10,
           fontFamily: fonts.medium,
           letterSpacing: 1.8,
           textTransform: "uppercase",

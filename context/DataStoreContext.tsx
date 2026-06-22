@@ -3,6 +3,7 @@ import React, {
   useContext,
   useState,
   useCallback,
+  useMemo,
   ReactNode,
 } from "react";
 import { Artwork, Artist } from "@/constants/data";
@@ -69,21 +70,21 @@ export function DataStoreProvider({ children }: { children: ReactNode }) {
   const getAllArtworks = useCallback(() => Object.values(artworks), [artworks]);
   const getAllArtists = useCallback(() => Object.values(artists), [artists]);
 
+  const value = useMemo(() => ({
+    artworks,
+    artists,
+    setArtwork,
+    setArtworks,
+    setArtist,
+    setArtists,
+    getArtwork,
+    getArtist,
+    getAllArtworks,
+    getAllArtists,
+  }), [artworks, artists, setArtwork, setArtworks, setArtist, setArtists, getArtwork, getArtist, getAllArtworks, getAllArtists]);
+
   return (
-    <DataStoreContext.Provider
-      value={{
-        artworks,
-        artists,
-        setArtwork,
-        setArtworks,
-        setArtist,
-        setArtists,
-        getArtwork,
-        getArtist,
-        getAllArtworks,
-        getAllArtists,
-      }}
-    >
+    <DataStoreContext.Provider value={value}>
       {children}
     </DataStoreContext.Provider>
   );

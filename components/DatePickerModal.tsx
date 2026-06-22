@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   headerTitle: {
-    fontSize: 16,
+    fontSize: 17,
     fontFamily: "Poppins_700Bold",
     color: "#1A1A2E",
   },
@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   colLabel: {
-    fontSize: 10,
+    fontSize: 11,
     fontFamily: "Poppins_600SemiBold",
     color: "#9CA3AF",
     textAlign: "center",
@@ -212,7 +212,7 @@ const styles = StyleSheet.create({
     borderColor: "#D4AF3760",
   },
   itemText: {
-    fontSize: 14,
+    fontSize: 15,
     fontFamily: "Poppins_400Regular",
     color: "#6B7280",
   },
@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
   },
   preview: {
     textAlign: "center",
-    fontSize: 15,
+    fontSize: 16,
     fontFamily: "Poppins_600SemiBold",
     color: "#1A1A2E",
     marginVertical: 14,
@@ -243,7 +243,7 @@ const styles = StyleSheet.create({
   },
   confirmText: {
     color: "#FFFFFF",
-    fontSize: 15,
+    fontSize: 16,
     fontFamily: "Poppins_700Bold",
     letterSpacing: 0.3,
   },

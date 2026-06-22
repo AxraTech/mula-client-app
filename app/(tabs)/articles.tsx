@@ -203,19 +203,19 @@ const cardStyles = StyleSheet.create({
     borderRadius: 3,
   },
   categoryText: {
-    fontSize: 10,
+    fontSize: 11,
     fontWeight: "700",
     letterSpacing: 0.8,
   },
   title: {
-    fontSize: 18,
+    fontSize: 19,
     fontWeight: "700",
-    lineHeight: 24,
+    lineHeight: 25,
     marginBottom: 8,
   },
   excerpt: {
-    fontSize: 13,
-    lineHeight: 25,
+    fontSize: 14,
+    lineHeight: 26,
     fontFamily: "Poppins-Regular",
     marginBottom: 12,
   },
@@ -233,7 +233,7 @@ const cardStyles = StyleSheet.create({
     gap: 5,
   },
   metaText: {
-    fontSize: 12,
+    fontSize: 13,
   },
   readBtn: {
     flexDirection: "row",
@@ -245,7 +245,7 @@ const cardStyles = StyleSheet.create({
     borderWidth: 1,
   },
   readBtnText: {
-    fontSize: 12,
+    fontSize: 13,
     fontWeight: "600",
   },
 });
@@ -354,12 +354,12 @@ export default function ArticlesScreen() {
         >
           {/* ── DEBUG: API Status (can remove) ── */}
           {/* {!loading && apiArticles && apiArticles.length > 0 && (
-            <Text style={{ fontSize: 10, color: theme.textLight, paddingHorizontal: 20, marginBottom: 8 }}>
+            <Text style={{ fontSize: 11, color: theme.textLight, paddingHorizontal: 20, marginBottom: 8 }}>
              Total {apiArticles.length} articles
             </Text>
           )}
           {!loading && (!apiArticles || apiArticles.length === 0) && (
-            <Text style={{ fontSize: 10, color: "#C0392B", paddingHorizontal: 20, marginBottom: 8 }}>
+            <Text style={{ fontSize: 11, color: "#C0392B", paddingHorizontal: 20, marginBottom: 8 }}>
               No API data - check connection
             </Text>
           )} */}
@@ -417,8 +417,8 @@ const styles = StyleSheet.create({
   // Header
   header: { paddingHorizontal: 20, paddingBottom: 12 },
   headerRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 16 },
-  headerSub: { fontSize: 10, letterSpacing: 2.5, marginBottom: 2 },
-  headerTitle: { fontSize: 28, letterSpacing: 0.3 },
+  headerSub: { fontSize: 11, letterSpacing: 2.5, marginBottom: 2 },
+  headerTitle: { fontSize: 29, letterSpacing: 0.3 },
   refreshBtn: {
     width: 36, height: 36, borderRadius: 18,
     borderWidth: 1, alignItems: "center", justifyContent: "center",
@@ -429,7 +429,7 @@ const styles = StyleSheet.create({
     borderRadius: 20, borderWidth: 1,
     marginBottom: 13,
   },
-  pillText: { fontSize: 12, letterSpacing: 0.3 },
+  pillText: { fontSize: 13, letterSpacing: 0.3 },
 
   // Section header
   sectionHeader: {
@@ -442,7 +442,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   sectionAccent: { width: 3, height: 16, borderRadius: 2 },
-  sectionTitle: { fontSize: 13, letterSpacing: 1 },
+  sectionTitle: { fontSize: 14, letterSpacing: 1 },
 
   // Hero Header (matching gallery/videos)
   hero: {
@@ -465,11 +465,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   brandMark: {
-    fontSize: 20,
+    fontSize: 21,
     letterSpacing: 3,
   },
   brandSub: {
-    fontSize: 11,
+    fontSize: 12,
     letterSpacing: 1.5,
     marginTop: 2,
   },
@@ -479,7 +479,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   tagline: {
-    fontSize: 13,
+    fontSize: 14,
     textAlign: "center",
     marginTop: 8,
     marginBottom: 4,
@@ -487,6 +487,6 @@ const styles = StyleSheet.create({
 
   // Empty
   empty: { alignItems: "center", paddingVertical: 80, gap: 10, paddingHorizontal: 32 },
-  emptyTitle: { fontSize: 18 },
-  emptyText: { fontSize: 14, textAlign: "center", lineHeight: 21 },
+  emptyTitle: { fontSize: 19 },
+  emptyText: { fontSize: 15, textAlign: "center", lineHeight: 22 },
 });

@@ -166,7 +166,7 @@ export default function ArticleDetailScreen() {
 
           {/* Content */}
           {article.content ? (
-            <Text style={[styles.body, { color: theme.text, fontFamily: theme.fonts.regular, lineHeight: 32 }]}>
+            <Text style={[styles.body, { color: theme.text, fontFamily: theme.fonts.regular, lineHeight: 33 }]}>
               {article.content}
             </Text>
           ) : (
@@ -202,11 +202,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   brandMark: {
-    fontSize: 18,
+    fontSize: 19,
     letterSpacing: 2,
   },
   brandSub: {
-    fontSize: 10,
+    fontSize: 11,
     letterSpacing: 1,
     marginTop: 2,
   },
@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
     borderRadius: 3,
   },
   categoryText: {
-    fontSize: 11,
+    fontSize: 12,
     fontWeight: "700",
     letterSpacing: 0.8,
   },
@@ -258,15 +258,15 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   readTimeText: {
-    fontSize: 13,
+    fontSize: 14,
   },
   title: {
-    fontSize: 28,
-    lineHeight: 36,
+    fontSize: 29,
+    lineHeight: 37,
     marginBottom: 8,
   },
   date: {
-    fontSize: 13,
+    fontSize: 14,
     marginBottom: 20,
   },
   divider: {
@@ -274,7 +274,7 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   body: {
-    fontSize: 16,
-    lineHeight: 30,
+    fontSize: 17,
+    lineHeight: 31,
   },
 });

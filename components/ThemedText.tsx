@@ -32,31 +32,31 @@ export function ThemedText({
   // Variant-specific styles
   const variantStyles = StyleSheet.create({
     body: {
-      fontSize: 14,
-      lineHeight: 20,
+      fontSize: 15,
+      lineHeight: 21,
     },
     title: {
-      fontSize: 18,
-      lineHeight: 26,
+      fontSize: 19,
+      lineHeight: 27,
       fontFamily: fonts.semiBold,
     },
     subtitle: {
-      fontSize: 16,
-      lineHeight: 22,
+      fontSize: 17,
+      lineHeight: 23,
       fontFamily: fonts.medium,
     },
     caption: {
-      fontSize: 12,
-      lineHeight: 16,
+      fontSize: 13,
+      lineHeight: 17,
     },
     button: {
-      fontSize: 14,
-      lineHeight: 20,
+      fontSize: 15,
+      lineHeight: 21,
       fontFamily: fonts.medium,
     },
     price: {
-      fontSize: 13,
-      lineHeight: 18,
+      fontSize: 14,
+      lineHeight: 19,
       fontFamily: fonts.semiBold,
     },
   });

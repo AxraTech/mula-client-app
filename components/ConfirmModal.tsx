@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    fontSize: 17,
+    fontSize: 18,
     fontFamily: "Poppins_700Bold",
     color: "#1A1A2E",
     textAlign: "center",
@@ -193,11 +193,11 @@ const styles = StyleSheet.create({
   },
 
   message: {
-    fontSize: 13,
+    fontSize: 14,
     fontFamily: "Poppins_400Regular",
     color: "#6B7280",
     textAlign: "center",
-    lineHeight: 20,
+    lineHeight: 21,
   },
 
   divider: {
@@ -223,7 +223,7 @@ const styles = StyleSheet.create({
     borderColor: "#E5E7EB",
   },
   cancelText: {
-    fontSize: 14,
+    fontSize: 15,
     fontFamily: "Poppins_600SemiBold",
     color: "#6B7280",
   },
@@ -235,7 +235,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   confirmText: {
-    fontSize: 14,
+    fontSize: 15,
     fontFamily: "Poppins_600SemiBold",
     color: "#FFFFFF",
   },

@@ -35,7 +35,7 @@ function CompactModeToggle() {
         style={[styles.compactToggleBtn, !isDigital && styles.compactToggleActive]}
       >
         <Text style={[styles.compactToggleText, { color: !isDigital ? "#5C4A1E" : "#888" }]}>
-          Manual
+          Contemporary
         </Text>
       </Pressable>
       <Pressable
@@ -224,15 +224,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   brandWrap: { alignItems: "center" },
-  brandMark: { fontSize: 22, letterSpacing: 6 },
-  brandSub: { fontSize: 8, letterSpacing: 3, marginTop: 2 },
+  brandMark: { fontSize: 23, letterSpacing: 6 },
+  brandSub: { fontSize: 9, letterSpacing: 3, marginTop: 2 },
   divider: {
     height: StyleSheet.hairlineWidth,
     marginHorizontal: 20,
   },
   tagline: {
     textAlign: "center",
-    fontSize: 11,
+    fontSize: 12,
     letterSpacing: 1.2,
     paddingTop: 10,
     paddingBottom: 12,
@@ -261,7 +261,7 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   compactToggleText: {
-    fontSize: 12,
+    fontSize: 13,
     fontWeight: "600",
   },
   content: { paddingTop: 20 },
@@ -310,7 +310,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 3,
   },
-  filmDurationText: { color: "#fff", fontSize: 9, letterSpacing: 0.4 },
+  filmDurationText: { color: "#fff", fontSize: 10, letterSpacing: 0.4 },
   filmPlay: {
     position: "absolute",
     top: "50%",
@@ -333,13 +333,13 @@ const styles = StyleSheet.create({
     gap: 3,
   },
   filmTitle: {
-    fontSize: 12,
-    lineHeight: 17,
+    fontSize: 13,
+    lineHeight: 18,
     letterSpacing: 0.1,
   },
   filmArtist: {
-    fontSize: 10,
-    lineHeight: 14,
+    fontSize: 11,
+    lineHeight: 15,
     letterSpacing: 0.4,
   },
   filmMeta: {
@@ -348,9 +348,9 @@ const styles = StyleSheet.create({
     gap: 5,
     marginTop: 2,
   },
-  filmMetaText: { fontSize: 9, letterSpacing: 0.3 },
+  filmMetaText: { fontSize: 10, letterSpacing: 0.3 },
   empty: { alignItems: "center", paddingVertical: 80, gap: 12 },
-  emptyText: { fontSize: 13, letterSpacing: 0.3, fontStyle: "italic" },
+  emptyText: { fontSize: 14, letterSpacing: 0.3, fontStyle: "italic" },
 });
 
 // FilmCard component for grid layout

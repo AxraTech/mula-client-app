@@ -7,7 +7,7 @@ import {
   Dimensions,
 } from "react-native";
 import { useLocalSearchParams, useRouter, Stack } from "expo-router";
-import { VideoView, useVideoPlayer } from "expo-video";
+import { Video, ResizeMode } from "expo-av";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTheme } from "@/context/ThemeContext";
 import { X } from "lucide-react-native";
@@ -23,11 +23,6 @@ export default function VideoPlayerScreen() {
   const [error, setError] = useState<string | null>(null);
 
   const videoUrl = url || null;
-
-  const player = useVideoPlayer(videoUrl, (player) => {
-    player.loop = true;
-    player.play();
-  });
 
   if (!videoUrl) {
     return (
@@ -66,10 +61,14 @@ export default function VideoPlayerScreen() {
             <Text style={styles.errorText}>{error}</Text>
           </View>
         ) : (
-          <VideoView
+          <Video
             style={styles.video}
-            player={player}
-            contentFit="contain"
+            source={{ uri: videoUrl }}
+            useNativeControls
+            resizeMode={ResizeMode.CONTAIN}
+            isLooping
+            shouldPlay
+            onError={() => setError("Failed to load video")}
           />
         )}
       </View>
@@ -104,7 +103,7 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: "#FFF",
-    fontSize: 16,
+    fontSize: 17,
   },
   errorContainer: {
     flex: 1,
@@ -119,7 +118,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(255,255,255,0.1)",
   },
   backBtnText: {
-    fontSize: 16,
+    fontSize: 17,
     fontWeight: "600",
   },
 });

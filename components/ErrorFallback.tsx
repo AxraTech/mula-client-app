@@ -196,15 +196,15 @@ const styles = StyleSheet.create({
     maxWidth: 600,
   },
   title: {
-    fontSize: 28,
+    fontSize: 29,
     fontWeight: "700",
     textAlign: "center",
-    lineHeight: 40,
+    lineHeight: 41,
   },
   message: {
-    fontSize: 16,
+    fontSize: 17,
     textAlign: "center",
-    lineHeight: 24,
+    lineHeight: 25,
   },
   topButton: {
     position: "absolute",
@@ -234,7 +234,7 @@ const styles = StyleSheet.create({
   buttonText: {
     fontWeight: "600",
     textAlign: "center",
-    fontSize: 16,
+    fontSize: 17,
   },
   modalOverlay: {
     flex: 1,
@@ -257,7 +257,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
   },
   modalTitle: {
-    fontSize: 20,
+    fontSize: 21,
     fontWeight: "600",
   },
   closeButton: {
@@ -279,8 +279,8 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   errorText: {
-    fontSize: 12,
-    lineHeight: 18,
+    fontSize: 13,
+    lineHeight: 19,
     width: "100%",
   },
 });
